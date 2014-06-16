@@ -11,7 +11,7 @@ class InstaGrabber:
 		self.__api = InstagramAPI(client_id=client_id, client_secret=client_secret)
 
 
-	def find_tags(self, coords, distance, max_date, min_date):
+	def find_tags(self, coords, distance, max_date, min_date, ignore_list=[]):
 		tags = {}
 		max_stamp = max_date
 		last_id = -1
@@ -22,22 +22,25 @@ class InstaGrabber:
 				max_timestamp=max_stamp, count=self.MAX_SEARCH_COUNT)
 
 			last_id = media[-1]
-			max_stamp = datetime_to_timestamp(media[-1].created_time)
 
-			tags = {}
-			self.__cals_tags(tags, media)
+			self.__cals_tags(tags, media, max_stamp, ignore_list)
 			max_tag = max(tags.iteritems(), key=operator.itemgetter(1))[0]
 			print "{0}: {1}".format(max_tag.encode('utf-8'), tags[max_tag])
 
+			max_stamp = datetime_to_timestamp(media[-1].created_time)
 
-	def __cals_tags(self, tags, media):
+
+	def __cals_tags(self, tags, media, max_timestamp, ignore_list):
 		for m in media:
-			try:
-				for t in m.tags:
-					"""if t.name not in (u"moscow", u"москва"):"""
-					if not t.name in tags:
-						tags[t.name] = 1
-					else:
-						tags[t.name] += 1
-			except AttributeError:
-				pass
+			if datetime_to_timestamp(m.created_time) < max_timestamp:
+				try:
+					for t in m.tags:
+						if t.name not in ignore_list:
+							if not t.name in tags:
+								tags[t.name] = 1
+							else:
+								tags[t.name] += 1
+				except AttributeError:
+					pass
+			else:
+				print "missed {0}".format(datetime_to_timestamp(m.created_time))
