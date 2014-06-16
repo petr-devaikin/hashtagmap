@@ -1,6 +1,7 @@
 *.rbc
 *.pyc
 *~
+*.db
 capybara-*.html
 .rspec
 /log
