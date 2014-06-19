@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
 from models import *
+from db_create_msk_location import *
+
+db.init('hashtag_map', user='hashtag', password='123')
 
 """drop tables"""
 
-if Location.table_exists():
-	Location.drop_table()
-	print '-- Location table dropped'
-
-if SimpleArea.table_exists():
-	SimpleArea.drop_table()
-	print '-- SimpleArea table dropped'
+if HashtagFrequency.table_exists():
+	HashtagFrequency.drop_table()
+	print '-- HashtagFrequency table dropped'
 
 if Hashtag.table_exists():
 	Hashtag.drop_table()
 	print '-- Hashtag table dropped'
 
-if HashtagFrequency.table_exists():
-	HashtagFrequency.drop_table()
-	print '-- HashtagFrequency table dropped'
+if SimpleArea.table_exists():
+	SimpleArea.drop_table()
+	print '-- SimpleArea table dropped'
+
+if Location.table_exists():
+	Location.drop_table()
+	print '-- Location table dropped'
 
 
 """create tables"""
@@ -36,7 +39,4 @@ print '++ HashtagFrequency table created'
 
 
 """init data"""
-Location.create(name=u'Moscow', \
-	north=55.996804, south=55.492144, west=37.235253, east=37.945527, \
-	height=56132, north_width=44181, south_width=44756)
-print "+++ Moscow location created"
+create_msk_location()

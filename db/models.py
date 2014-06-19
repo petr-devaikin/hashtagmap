@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from peewee import *
 
-db = SqliteDatabase('tags.db')
+db = MySQLDatabase(None)
 
 class Location(Model):
 	name = CharField()
@@ -29,7 +29,7 @@ class SimpleArea(Model):
 
 
 class Hashtag(Model):
-	name = CharField()
+	name = CharField(unique=True)
 
 	class Meta:
 		database = db
@@ -38,6 +38,7 @@ class Hashtag(Model):
 class HashtagFrequency(Model):
 	hashtag = ForeignKeyField(Hashtag, related_name='counts')
 	simple_area = ForeignKeyField(SimpleArea, related_name='hashtag_counts')
+	count = IntegerField(default=0)
 
 	class Meta:
 		database = db

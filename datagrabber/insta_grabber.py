@@ -16,18 +16,21 @@ class InstaGrabber:
 		max_stamp = max_date
 		last_id = -1
 		while max_stamp > min_date:
-			print "{0} -> {1}".format(max_stamp, min_date)
-
 			media = self.__api.media_search(lat=coords[0], lng=coords[1], distance=distance, \
 				max_timestamp=max_stamp, count=self.MAX_SEARCH_COUNT)
 
-			last_id = media[-1]
+			if len(media) == 0:
+				break
 
 			self.__cals_tags(tags, media, max_stamp, ignore_list)
-			max_tag = max(tags.iteritems(), key=operator.itemgetter(1))[0]
-			print "{0}: {1}".format(max_tag.encode('utf-8'), tags[max_tag])
+			if len(tags) > 0:
+				max_tag = max(tags.iteritems(), key=operator.itemgetter(1))[0]
+				print "{0}: {1}".format(max_tag.encode('utf-8'), tags[max_tag])
+			else:
+				print "no tags"
 
 			max_stamp = datetime_to_timestamp(media[-1].created_time)
+		return tags
 
 
 	def __cals_tags(self, tags, media, max_timestamp, ignore_list):

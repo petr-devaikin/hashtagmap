@@ -13,6 +13,5 @@ distance = 1000
 now = time.time()
 
 grabber = InstaGrabber(client_id, client_secret)
-common_ignore 
 grabber.find_tags(ostankino_coords, distance, now, now - 24 * 3600, [u"moscow", u"москва", u"russia"] + common_ignore)
 
