@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Hello</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    </head>
+    <body>
+        {% for area in areas %}
+            <div class="tag-area" longitude="{{ area.longitude }}" latitude="{{ area.latitude }}"
+                count="{{ area.most_popular_tag().count }}">
+                {% if area.most_popular_tag() != None %}
+                    {{ area.most_popular_tag().hashtag.name }}
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <script>
+            var maximum_count = {{ max_count }};
+        </script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </body>
+</html>

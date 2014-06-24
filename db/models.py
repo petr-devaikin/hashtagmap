@@ -24,6 +24,12 @@ class SimpleArea(Model):
 	radius = IntegerField()
 	updated = DateTimeField(null=True)
 
+	def most_popular_tag(self):
+		if self.hashtag_counts.count() > 0:
+			return self.hashtag_counts.order_by(HashtagFrequency.count.desc()).get()
+		else:
+			return None
+
 	class Meta:
 		database = db
 
