@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from peewee import *
 
-db = MySQLDatabase(None)
+db = MySQLDatabase(None, threadlocals=True)
 
 class Location(Model):
     name = CharField()
