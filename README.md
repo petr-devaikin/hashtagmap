@@ -1,4 +1,4 @@
 hashtagmap
 ==========
 
-Hashtag map of ciries
+Hashtag map of cities

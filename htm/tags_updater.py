@@ -47,7 +47,7 @@ class TagsUpdater(threading.Thread):
         print "+++ {2} tags for area {0} of {1} updated".format(area.id, area.location.name, area.hashtag_counts.count())
 
 
-def update_tags(time_delta=120, threads_count=50):
+def update_tags(time_delta=3600, threads_count=100):
     db.init(DB_NAME, user=DB_USER, password=DB_PASSWORD)
 
     areas_queue = Queue.Queue()
