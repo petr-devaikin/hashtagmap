@@ -5,6 +5,7 @@ body {
 
 .tag-area {
     position: absolute;
-    font-size: 10px;
+    font-size: 12px;
     border: 1px dotted silver;
+    word-wrap: break-word;
 }

@@ -7,7 +7,7 @@
     <body>
         {% for area in areas %}
             <div class="tag-area" longitude="{{ area.longitude }}" latitude="{{ area.latitude }}"
-                count="{{ area.most_popular_tag().count }}">
+                count="{{ area.most_popular_tag().count }}" radius="{{ area.radius }}">
                 {% if area.most_popular_tag() != None %}
                     {{ area.most_popular_tag().hashtag.name }}
                 {% endif %}
@@ -16,6 +16,8 @@
 
         <script>
             var maximum_count = {{ max_count }};
+            var lat_km = {{ lat_km }};
+            var long_km = {{ long_km }};
         </script>
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     </body>

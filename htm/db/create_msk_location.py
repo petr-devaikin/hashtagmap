@@ -7,8 +7,10 @@ def create_msk_location():
 		height=56132, north_width=44181, south_width=44756)
 	print "+++ Moscow location created"
 
-	lat_km = (msk.north - msk.south) / msk.height * 1000 * 2
-	long_km = (msk.east - msk.west) / (msk.north_width + msk.south_width) * 2 * 1000 * 2
+	radius = 1000
+
+	lat_km = (msk.north - msk.south) / msk.height * 1000
+	long_km = (msk.east - msk.west) / (msk.north_width + msk.south_width) * 2 * 1000
 
 	msk_coords = ((msk.north + msk.south) / 2, (msk.east + msk.west) / 2)
 
@@ -19,14 +21,14 @@ def create_msk_location():
 		first_area = None
 		last_area = None
 		while x > msk.west:
-			first_area = SimpleArea.create(location=msk, latitude=y, longitude=x, radius=1000)
+			first_area = SimpleArea.create(location=msk, latitude=y, longitude=x, radius=radius)
 			counter += 1
-			x -= long_km
+			x -= long_km * 2 * radius / 1000
 		x = msk_coords[1] + long_km
 		while x < msk.east:
-			last_area = SimpleArea.create(location=msk, latitude=y, longitude=x, radius=1000)
+			last_area = SimpleArea.create(location=msk, latitude=y, longitude=x, radius=radius)
 			counter += 1
-			x += long_km
+			x += long_km * 2 * radius / 1000
 		print "+++ Moscow areas created {4}: ({0}, {1}) - ({2}, {3})".format(first_area.latitude, \
 			first_area.longitude, last_area.latitude, last_area.longitude, counter)
 		y -= lat_km
@@ -38,14 +40,14 @@ def create_msk_location():
 		first_area = None
 		last_area = None
 		while x > msk.west:
-			first_area = SimpleArea.create(location=msk, latitude=y, longitude=x, radius=1000)
+			first_area = SimpleArea.create(location=msk, latitude=y, longitude=x, radius=radius)
 			counter += 1
-			x -= long_km
+			x -= long_km * 2 * radius / 1000
 		x = msk_coords[1] + long_km
 		while x < msk.east:
-			last_area = SimpleArea.create(location=msk, latitude=y, longitude=x, radius=1000)
+			last_area = SimpleArea.create(location=msk, latitude=y, longitude=x, radius=radius)
 			counter += 1
-			x += long_km
+			x += long_km * 2 * radius / 1000
 		print "+++ Moscow areas created {4}: ({0}, {1}) - ({2}, {3})".format(first_area.latitude, \
 			first_area.longitude, last_area.latitude, last_area.longitude, counter)
 		y += lat_km

@@ -26,11 +26,14 @@ class SimpleArea(Model):
     radius = IntegerField()
     updated = DateTimeField(null=True)
 
+
     def most_popular_tag(self):
-        if self.hashtag_counts.count() > 0:
-            return self.hashtag_counts.order_by(HashtagFrequency.count.desc()).get()
-        else:
-            return None
+        if not hasattr(self, '__most_popular_tag__'):
+            if self.hashtag_counts.count() > 0:
+                self.__most_popular_tag__= self.hashtag_counts.order_by(HashtagFrequency.count.desc()).get()
+            else:
+                self.__most_popular_tag__ = None
+        return self.__most_popular_tag__
 
 
     def add_connections(self):

@@ -24,7 +24,7 @@ class TagsUpdater(threading.Thread):
                     area = self.queue.get(False)
                     self.update_tags_for_area(area)
                     self.queue.task_done()
-                except Empty:
+                except Queue.Empty:
                     pass
         finally:
             pass
