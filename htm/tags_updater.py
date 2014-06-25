@@ -22,10 +22,11 @@ class TagsUpdater(threading.Thread):
                 print "Areas left: {0}".format(self.queue.qsize())
                 try:
                     area = self.queue.get(False)
-                    self.update_tags_for_area(area)
-                    self.queue.task_done()
                 except Queue.Empty:
                     pass
+                else:
+                    self.update_tags_for_area(area)
+                    self.queue.task_done()
         finally:
             pass
 
