@@ -8,8 +8,12 @@ db.init(config.DB_NAME, user=config.DB_USER, password=config.DB_PASSWORD)
 
 def drop_tables():
     if HashtagFrequency.table_exists():
-    	HashtagFrequency.drop_table()
-    	print '-- HashtagFrequency table dropped'
+        HashtagFrequency.drop_table()
+        print '-- HashtagFrequency table dropped'
+        
+    if TagsOfAreaInHour.table_exists():
+        TagsOfAreaInHour.drop_table()
+        print '-- TagsOfAreaInHour table dropped'
 
     if Hashtag.table_exists():
     	Hashtag.drop_table()
@@ -33,6 +37,9 @@ def create_tables():
 
     Hashtag.create_table()
     print '++ Hashtag table created'
+
+    TagsOfAreaInHour.create_table()
+    print '++ TagsOfAreaInHour table created'
 
     HashtagFrequency.create_table()
     print '++ HashtagFrequency table created'

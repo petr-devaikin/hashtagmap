@@ -12,6 +12,7 @@ class Location(Model):
     height = IntegerField()
     north_width = IntegerField()
     south_width = IntegerField()
+    updated = DateTimeField(null=True)
 
     class Meta:
         database = db
@@ -24,17 +25,19 @@ class SimpleArea(Model):
     latitude = DoubleField()
     longitude = DoubleField()
     radius = IntegerField()
-    updated = DateTimeField(null=True)
-
 
     def most_popular_tag(self):
         if not hasattr(self, '__most_popular_tag__'):
-            if self.hashtag_counts.count() > 0:
-                self.__most_popular_tag__= self.hashtag_counts.order_by(HashtagFrequency.count.desc()).get()
+            if self.tags_in_hour.count() > 0:
+                join = self.tags_in_hour.join(HashtagFrequency).join(Hashtag)
+                count_sum = fn.Sum(HashtagFrequency.count)
+                select = join.select(Hashtag, count_sum.alias('count_sum'))
+                group = select.group_by(Hashtag).order_by(count_sum.desc())
+
+                self.__most_popular_tag__ = group.first()
             else:
                 self.__most_popular_tag__ = None
         return self.__most_popular_tag__
-
 
     def add_connections(self):
         all_north = SimpleArea.select().where((SimpleArea.longitude == self.longitude) & \
@@ -49,6 +52,14 @@ class SimpleArea(Model):
 
         self.save()
 
+    class Meta:
+        database = db
+
+
+class TagsOfAreaInHour(Model):
+    area = ForeignKeyField(SimpleArea, related_name='tags_in_hour')
+    max_stamp = DateTimeField()
+    min_stamp = DateTimeField()
 
     class Meta:
         database = db
@@ -63,7 +74,7 @@ class Hashtag(Model):
 
 class HashtagFrequency(Model):
     hashtag = ForeignKeyField(Hashtag, related_name='counts')
-    simple_area = ForeignKeyField(SimpleArea, related_name='hashtag_counts')
+    area_in_hour = ForeignKeyField(TagsOfAreaInHour, related_name='hashtag_counts')
     count = IntegerField(default=0)
 
     class Meta:
