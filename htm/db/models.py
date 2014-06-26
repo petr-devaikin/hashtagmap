@@ -14,6 +14,27 @@ class Location(Model):
     south_width = IntegerField()
     updated = DateTimeField(null=True)
 
+    def clear_old_hours(self, min_time):
+        hours_to_clear = TagsOfAreaInHour.select().where(TagsOfAreaInHour.area << self.simple_areas, 
+            TagsOfAreaInHour.max_stamp < min_time)
+        count = hours_to_clear.count()
+
+        HashtagFrequency.delete().where(HashtagFrequency.area_in_hour << hours_to_clear).execute()
+        TagsOfAreaInHour.delete().where(TagsOfAreaInHour.area << self.simple_areas, 
+            TagsOfAreaInHour.max_stamp < min_time).execute()
+
+        print "Location {0}: {1} old hours to removed".format(self.name, count)
+
+    def update_time(self):
+        all_hours = TagsOfAreaInHour.select().where(TagsOfAreaInHour.area << self.simple_areas).order_by(TagsOfAreaInHour.max_stamp.desc())
+        if all_hours.count() == 0:
+            self.updated = None
+        else:
+            self.updated = all_hours.first().max_stamp
+        self.save()
+
+
+
     class Meta:
         database = db
 
@@ -60,6 +81,7 @@ class TagsOfAreaInHour(Model):
     area = ForeignKeyField(SimpleArea, related_name='tags_in_hour')
     max_stamp = DateTimeField()
     min_stamp = DateTimeField()
+    processed = DateTimeField()
 
     class Meta:
         database = db

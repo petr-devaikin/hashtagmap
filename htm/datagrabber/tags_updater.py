@@ -33,8 +33,7 @@ class TagsUpdater(threading.Thread):
             try:
                 self.update_tags_for_area(area)
             except:
-                self.queue.put(area)
-                print "Area {0} returned to queue".format(area.id)
+                print "Area {0} is not processed".format(area.id)
             finally:
                 self.queue.task_done()
 
@@ -51,6 +50,9 @@ class TagsUpdater(threading.Thread):
             hashtag = Hashtag.get_or_create(name=tag_name)
             self.db_lock.release()
             HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
+
+        area_hour.processed = datetime.datetime.now()
+        area_hour.save()
 
         print "+++ {2} tags for area {0} of {1} updated".format(area.id, area.location.name, area_hour.hashtag_counts.count())
 
@@ -70,43 +72,36 @@ def update_tags(threads_count=100, memory=24 * 3600):
     now = datetime.datetime.now()
     last_memory_time = now + datetime.timedelta(seconds=-memory)
     small_delta = datetime.timedelta(seconds=TIME_DELTA)
-    max_stamp = last_memory_time
 
     for location in Location.select():
         if location.updated == None:
-            location.updated = now - small_delta
-            location.save()
+            start_time = now - small_delta
+        else:
+            start_time = location.updated
 
-        hours_to_clear = TagsOfAreaInHour.select().where(TagsOfAreaInHour.area << location.simple_areas, 
-            (TagsOfAreaInHour.max_stamp < last_memory_time) | \
-            (TagsOfAreaInHour.max_stamp > location.updated))
+        location.clear_old_hours(last_memory_time)
 
-        print "Location {0}: {1} hours to clean".format(location.name, hours_to_clear.count())
+        # process not processed areas
+        for tah in TagsOfAreaInHour.select().where(TagsOfAreaInHour.processed == None, \
+                    TagsOfAreaInHour.area << location.simple_areas):
+            areas_queue.put(tah)
 
-        HashtagFrequency.delete().where(HashtagFrequency.area_in_hour << hours_to_clear).execute()
-        TagsOfAreaInHour.delete().where(TagsOfAreaInHour.area << location.simple_areas, 
-            (TagsOfAreaInHour.max_stamp < last_memory_time) | \
-            (TagsOfAreaInHour.max_stamp > location.updated)).execute()
-
+        # add new areas
         for area in SimpleArea.select().where(SimpleArea.location == location):
-            cur_max_time = location.updated
+            cur_max_time = start_time
             while cur_max_time + small_delta <= now:
                 tah = TagsOfAreaInHour.create(area=area, \
                     max_stamp=cur_max_time+small_delta, \
                     min_stamp=cur_max_time)
                 areas_queue.put(tah)
 
-                if cur_max_time > max_stamp:
-                    cur_max_time = max_stamp
-
                 cur_max_time = cur_max_time + small_delta
+
+        location.update_time()
+
 
     # hope that putting is faster than processing
     areas_queue.join()
-
-    for location in Location.select():
-        location.updated = max_stamp
-        location.save()
 
     for t in threads:
         t.stop()
