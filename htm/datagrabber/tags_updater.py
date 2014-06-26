@@ -43,7 +43,7 @@ class TagsUpdater(threading.Thread):
         min_stamp = calendar.timegm(area_hour.min_stamp.timetuple())
 
         tags = self.grabber.find_tags((area.latitude, area.longitude), area.radius, \
-            max_stamp, min_stamp, COMMON_IGNORE)
+            max_stamp, min_stamp)
 
         for tag_name in tags:
             self.db_lock.acquire()
