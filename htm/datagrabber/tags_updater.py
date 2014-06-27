@@ -26,18 +26,23 @@ class TagsUpdater(threading.Thread):
         while not self.stopped():
             try:
                 area = self.queue.get(timeout=1)
-                print "Areas left: {0}".format(self.queue.qsize())
+                if not self.__pass_everything:
+                    print "Areas left: {0}".format(self.queue.qsize())
             except Queue.Empty:
                 continue
 
             try:
-                self.update_tags_for_area(area)
+                if not self.__pass_everything:
+                    self.update_tags_for_area(area)
             except:
                 print "Area {0} is not processed".format(area.id)
-                self.__change_client()
+                if not self.__change_client():
+                    self.__pass_everything = True
+                    print "Instagram banned me :("
             finally:
                 self.queue.task_done()
 
+    __pass_everything = False
     __current_client = 0
 
     def __get_grabber(self):
@@ -47,8 +52,10 @@ class TagsUpdater(threading.Thread):
     def __change_client(self):
         self.__current_client += 1
         if len(LOGINS) <= self.__current_client:
-            self.__current_client = 0
-        self.grabber = self.__get_grabber()
+            return False
+        else:
+            self.grabber = self.__get_grabber()
+            return True
 
     def update_tags_for_area(self, area_hour):
         area = area_hour.area
