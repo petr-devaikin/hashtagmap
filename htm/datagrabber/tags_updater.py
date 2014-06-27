@@ -13,7 +13,7 @@ class TagsUpdater(threading.Thread):
         super(TagsUpdater, self).__init__()
         self.queue = areas_queue
         self.db_lock = db_lock
-        self.grabber = InstaGrabber(CLIENT_ID, CLIENT_SECRET)
+        self.grabber = self.__get_grabber()
         self._stop = threading.Event()
 
     def stop(self):
@@ -34,8 +34,21 @@ class TagsUpdater(threading.Thread):
                 self.update_tags_for_area(area)
             except:
                 print "Area {0} is not processed".format(area.id)
+                self.__change_client()
             finally:
                 self.queue.task_done()
+
+    __current_client = 0
+
+    def __get_grabber(self):
+        return InstaGrabber(LOGINS[self.__current_client]['CLIENT_ID'], \
+            LOGINS[self.__current_client]['CLIENT_SECRET'])
+
+    def __change_client(self):
+        self.__current_client += 1
+        if len(LOGINS) <= self.__current_client:
+            self.__current_client == 0
+        self.grabber = self.__get_grabber()
 
     def update_tags_for_area(self, area_hour):
         area = area_hour.area
@@ -70,16 +83,17 @@ def update_tags(threads_count=100, memory=24 * 3600):
         t.start()
 
     now = datetime.datetime.now()
-    last_memory_time = now + datetime.timedelta(seconds=-memory)
+    last_memory_time = now - datetime.timedelta(seconds=memory)
     small_delta = datetime.timedelta(seconds=TIME_DELTA)
 
     for location in Location.select():
+        location.clear_old_hours(last_memory_time)
+        location.update_time()
+        
         if location.updated == None:
-            start_time = now - small_delta
+            start_time = last_memory_time
         else:
             start_time = location.updated
-
-        location.clear_old_hours(last_memory_time)
 
         # process not processed areas
         for tah in TagsOfAreaInHour.select().where(TagsOfAreaInHour.processed == None, \
