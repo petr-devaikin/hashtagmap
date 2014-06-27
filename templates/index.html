@@ -6,12 +6,15 @@
     </head>
     <body>
         {% for area in areas %}
-            <div class="tag-area" longitude="{{ area.longitude }}" latitude="{{ area.latitude }}"
-                count="{{ area.most_popular_tag().count }}" radius="{{ area.radius }}">
-                {% if area.most_popular_tag() != None %}
+            {% if area.most_popular_tag() != None %}
+                <div class="tag-area" 
+                        longitude="{{ area.longitude }}"
+                        latitude="{{ area.latitude }}"
+                        count="{{ area.most_popular_tag().count }}" 
+                        radius="{{ area.radius }}">
                     {{ area.most_popular_tag().hashtag.name }}
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         {% endfor %}
 
         <script>

@@ -50,10 +50,12 @@ class SimpleArea(Model):
     def most_popular_tag(self):
         if not hasattr(self, '__most_popular_tag__'):
             if self.tags_in_hour.count() > 0:
-                join = self.tags_in_hour.join(HashtagFrequency).join(Hashtag)
                 count_sum = fn.Sum(HashtagFrequency.count)
-                select = join.select(Hashtag, count_sum.alias('count_sum'))
-                group = select.group_by(Hashtag).order_by(count_sum.desc())
+
+                sq = Hashtag.select(Hashtag, count_sum.alias('count_sum'))
+                join = sq.join(HashtagFrequency).join(TagsOfAreaInHour)
+                where = join.where(TagsOfAreaInHour.area << self.tags_in_hour)
+                group = where.group_by(Hashtag).order_by(count_sum.desc())
 
                 self.__most_popular_tag__ = group.first()
             else:

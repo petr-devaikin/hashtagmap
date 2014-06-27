@@ -24,15 +24,16 @@ class InstaGrabber:
             if len(media) == 0:
                 break
 
-            self.__cals_tags(tags, media, max_stamp, ignore_list)
+            self.__cals_tags(tags, media, max_stamp, min_date, ignore_list)
 
             max_stamp = datetime_to_timestamp(media[-1].created_time)
         return tags
 
 
-    def __cals_tags(self, tags, media, max_timestamp, ignore_list):
+    def __cals_tags(self, tags, media, max_timestamp, min_timestamp, ignore_list):
         for m in media:
-            if datetime_to_timestamp(m.created_time) < max_timestamp:
+            dt = datetime_to_timestamp(m.created_time)
+            if dt < max_timestamp and dt >= min_timestamp:
                 try:
                     for t in m.tags:
                         if t.name not in ignore_list:

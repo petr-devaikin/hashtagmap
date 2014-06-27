@@ -47,7 +47,7 @@ class TagsUpdater(threading.Thread):
     def __change_client(self):
         self.__current_client += 1
         if len(LOGINS) <= self.__current_client:
-            self.__current_client == 0
+            self.__current_client = 0
         self.grabber = self.__get_grabber()
 
     def update_tags_for_area(self, area_hour):
@@ -89,7 +89,7 @@ def update_tags(threads_count=100, memory=24 * 3600):
     for location in Location.select():
         location.clear_old_hours(last_memory_time)
         location.update_time()
-        
+
         if location.updated == None:
             start_time = last_memory_time
         else:
