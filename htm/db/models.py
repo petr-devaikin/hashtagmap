@@ -54,7 +54,7 @@ class SimpleArea(Model):
 
                 sq = Hashtag.select(Hashtag, count_sum.alias('count_sum'))
                 join = sq.join(HashtagFrequency).join(TagsOfAreaInHour)
-                where = join.where(TagsOfAreaInHour.area << self.tags_in_hour)
+                where = join.where(TagsOfAreaInHour.area == self)
                 group = where.group_by(Hashtag).order_by(count_sum.desc())
 
                 self.__most_popular_tag__ = group.first()

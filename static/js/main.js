@@ -6,7 +6,7 @@ var MAX_LONGITUDE = 37.945527;
 var MIN_OPACITY = 0.2;
 var MAX_OPACITY = 1;
 
-var PIXELS_PER_KM = 25;
+var PIXELS_PER_KM = 30;
 
 window.onload = function() {
     var areas = document.getElementsByClassName('tag-area');

@@ -25,9 +25,8 @@ def hello_world():
     max_count = 0
     print 'Done1'
     for a in areas:
-        print a
         if a.most_popular_tag() != None and a.most_popular_tag().count_sum > max_count:
-            max_count = a.most_popular_tag().count_cum
+            max_count = a.most_popular_tag().count_sum
     print 'Done2'
     return render_template('index.html', areas=areas, max_count=max_count, lat_km=lat_km, \
         long_km=long_km)
