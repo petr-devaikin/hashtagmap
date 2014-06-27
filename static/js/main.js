@@ -3,10 +3,10 @@ var MIN_LONGITUDE = 37.235253;
 var MAX_LATITUDE = 55.996804;
 var MAX_LONGITUDE = 37.945527;
 
-var MIN_OPACITY = 0.2;
+var MIN_OPACITY = 0;
 var MAX_OPACITY = 1;
 
-var PIXELS_PER_KM = 30;
+var PIXELS_PER_KM = 15;
 
 window.onload = function() {
     var areas = document.getElementsByClassName('tag-area');

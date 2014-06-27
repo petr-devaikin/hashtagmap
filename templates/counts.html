@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Hello</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    </head>
+    <body>
+        {% for area in areas %}
+            <div class="tag-area count" 
+                    longitude="{{ area.longitude }}"
+                    latitude="{{ area.latitude }}"
+                    count="{{ area.c }}" 
+                    radius="{{ area.radius }}">
+            </div>
+        {% endfor %}
+
+        <script>
+            var maximum_count = {{ max_count }};
+            var lat_km = {{ lat_km }};
+            var long_km = {{ long_km }};
+        </script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </body>
+</html>

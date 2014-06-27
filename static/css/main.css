@@ -9,3 +9,8 @@ body {
     border: 1px dotted silver;
     word-wrap: break-word;
 }
+
+.tag-area.count {
+    background: black;
+    border: none;
+}

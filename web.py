@@ -24,11 +24,34 @@ def hello_world():
     areas = location.simple_areas
     max_count = 0
     print 'Done1'
+    moscow_ignore = [u'moscow', u'москва', u'russia', u'россия', u'vscorussia']
     for a in areas:
-        if a.most_popular_tag() != None and a.most_popular_tag().count_sum > max_count:
+        if a.most_popular_tag(config.COMMON_IGNORE + moscow_ignore) != None and \
+                a.most_popular_tag().count_sum > max_count:
             max_count = a.most_popular_tag().count_sum
     print 'Done2'
     return render_template('index.html', areas=areas, max_count=max_count, lat_km=lat_km, \
+        long_km=long_km)
+
+
+@app.route('/<tag_name>')
+def counts(tag_name):
+    location = Location.get()
+
+    lat_km = (location.north - location.south) / location.height * 1000
+    long_km = (location.east - location.west) / (location.north_width + location.south_width) * \
+        2 * 1000
+
+    areas = location.simple_areas
+    max_count = 0
+    print 'Done1'
+    for a in areas:
+        count = a.count_of_tag(tag_name)
+        a.c = count
+        if count > max_count:
+            max_count = count
+    print 'Done2'
+    return render_template('counts.html', areas=areas, max_count=max_count, lat_km=lat_km, \
         long_km=long_km)
 
 if __name__ == '__main__':

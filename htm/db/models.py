@@ -47,20 +47,35 @@ class SimpleArea(Model):
     longitude = DoubleField()
     radius = IntegerField()
 
-    def most_popular_tag(self):
+    def most_popular_tag(self, ignore=[]):
         if not hasattr(self, '__most_popular_tag__'):
             if self.tags_in_hour.count() > 0:
                 count_sum = fn.Sum(HashtagFrequency.count)
 
                 sq = Hashtag.select(Hashtag, count_sum.alias('count_sum'))
                 join = sq.join(HashtagFrequency).join(TagsOfAreaInHour)
-                where = join.where(TagsOfAreaInHour.area == self)
+                where = join.where((TagsOfAreaInHour.area == self), ~(Hashtag.name << ignore))
                 group = where.group_by(Hashtag).order_by(count_sum.desc())
 
                 self.__most_popular_tag__ = group.first()
             else:
                 self.__most_popular_tag__ = None
         return self.__most_popular_tag__
+
+    def count_of_tag(self, tag):
+        count_sum = fn.Sum(HashtagFrequency.count)
+
+        sq = Hashtag.select(Hashtag, count_sum.alias('count_sum'))
+        join = sq.join(HashtagFrequency).join(TagsOfAreaInHour)
+        where = join.where((TagsOfAreaInHour.area == self), Hashtag.name == tag)
+        group = where.group_by(Hashtag).order_by(count_sum.desc())
+
+        h = group.first()
+        if h == None:
+            return 0
+        else:
+            return group.first().count_sum
+
 
     def add_connections(self):
         all_north = SimpleArea.select().where((SimpleArea.longitude == self.longitude) & \
