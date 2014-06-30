@@ -11,8 +11,11 @@ class TagsUpdaterThread(threading.Thread):
         super(TagsUpdaterThread, self).__init__()
         self.queue = areas_queue
         self.db_lock = db_lock
-        self.grabber = self.__get_grabber()
+        self.grabber = self._get_grabber()
         self._stop = threading.Event()
+    
+    _pass_everything = False
+    _current_client = 0
 
     def stop(self):
         self._stop.set()
@@ -24,35 +27,34 @@ class TagsUpdaterThread(threading.Thread):
         while not self.stopped():
             try:
                 area = self.queue.get(timeout=1)
-                if not self.__pass_everything:
-                    print "Areas left: {0}".format(self.queue.qsize())
+                #if not self._pass_everything:
+                print "Areas left: {0}".format(self.queue.qsize())
+
+                try:
+                    if not self._pass_everything:
+                        self.update_tags_for_area(area)
+                except:
+                    print "Area {0} is not processed".format(area.id)
+                    if not self._change_client():
+                        self._pass_everything = True
+                        print "Instagram banned me :("
+                finally:
+                    self.queue.task_done()
+
             except Queue.Empty:
+                print 'empty'
                 continue
 
-            try:
-                if not self.__pass_everything:
-                    self.update_tags_for_area(area)
-            except:
-                print "Area {0} is not processed".format(area.id)
-                if not self.__change_client():
-                    self.__pass_everything = True
-                    print "Instagram banned me :("
-            finally:
-                self.queue.task_done()
+    def _get_grabber(self):
+        return InstaGrabber(LOGINS[self._current_client]['CLIENT_ID'], \
+            LOGINS[self._current_client]['CLIENT_SECRET'])
 
-    __pass_everything = False
-    __current_client = 0
-
-    def __get_grabber(self):
-        return InstaGrabber(LOGINS[self.__current_client]['CLIENT_ID'], \
-            LOGINS[self.__current_client]['CLIENT_SECRET'])
-
-    def __change_client(self):
-        self.__current_client += 1
-        if len(LOGINS) <= self.__current_client:
+    def _change_client(self):
+        self._current_client += 1
+        if len(LOGINS) <= self._current_client:
             return False
         else:
-            self.grabber = self.__get_grabber()
+            self.grabber = self._get_grabber()
             return True
 
     def update_tags_for_area(self, area_hour):
