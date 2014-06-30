@@ -3,8 +3,9 @@ DB_NAME = 'hashtag_map'
 DB_USER = 'hashtag'
 DB_PASSWORD = '123'
 
-COMMON_IGNORE = [u'instasize', u'vscocam', u'vsco', u'love', u'vscophoto', u'vscogood', \
-  u'followme', u'followmeback']
+COMMON_IGNORE = [u'instasize', u'love', \
+    u'vsco', u'vscocam', u'vscophoto', u'vscogood', u'vscobest', \
+    u'followme', u'followmeback']
 
 LOGINS = [ \
     { 'CLIENT_ID': 'fd2526cfad7d4aaa948d20314b938132', \
