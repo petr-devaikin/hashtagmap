@@ -22,18 +22,7 @@ def hello_world():
         2 * 1000
 
     areas = location.simple_areas
-    max_count = 0
-    print 'Done1'
-
-    ignore = [] + config.COMMON_IGNORE
-    for tag in location.ignore_list:
-        ignore.append(tag.tag)
-
-    for a in areas:
-        if a.most_popular_tag(ignore) != None and \
-                a.most_popular_tag().count > max_count:
-            max_count = a.most_popular_tag().count
-    print 'Done2'
+    max_count = location.simple_areas.order_by(SimpleArea.most_popular_tag_count.desc()).first().most_popular_tag_count
     return render_template('index.html', areas=areas, max_count=max_count, lat_km=lat_km, \
         long_km=long_km)
 

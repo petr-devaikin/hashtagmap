@@ -45,20 +45,34 @@ class IgnoreForLocation(Model):
         database = db
 
 
+class Hashtag(Model):
+    name = CharField(unique=True)
+
+    class Meta:
+        database = db
+
+
 class SimpleArea(Model):
     location = ForeignKeyField(Location, related_name='simple_areas')
     to_north = ForeignKeyField('self', related_name='to_south', null=True)
     to_west = ForeignKeyField('self', related_name='to_east', null=True)
+    most_popular_tag_name = CharField(null=True)
+    most_popular_tag_count = IntegerField(null=True)
     latitude = DoubleField()
     longitude = DoubleField()
     radius = IntegerField()
 
-    def most_popular_tag(self, ignore=[]):
-        if not hasattr(self, '__most_popular_tag__'):
-            sq = self.hashtag_counts_sum.join(Hashtag)
-            where = sq.where(~(Hashtag.name << ignore)).order_by(HashtagFrequencySum.count.desc())
-            self.__most_popular_tag__ = where.first()
-        return self.__most_popular_tag__
+    def calc_most_popular_tag(self, ignore=[]):
+        sq = self.hashtag_counts_sum.join(Hashtag)
+        where = sq.where(~(Hashtag.name << ignore)).order_by(HashtagFrequencySum.count.desc())
+        tag = where.first()
+        if tag == None:
+            self.most_popular_tag_name = None
+            self.most_popular_tag_count = None
+        else:
+            self.most_popular_tag_name = tag.hashtag.name
+            self.most_popular_tag_count = tag.count
+        self.save()
 
     def count_of_tag(self, tag):
         sq = self.hashtag_counts_sum.join(Hashtag).where(Hashtag.name == tag)
@@ -91,13 +105,6 @@ class TagsOfAreaInHour(Model):
     max_stamp = DateTimeField()
     min_stamp = DateTimeField()
     processed = DateTimeField()
-
-    class Meta:
-        database = db
-
-
-class Hashtag(Model):
-    name = CharField(unique=True)
 
     class Meta:
         database = db

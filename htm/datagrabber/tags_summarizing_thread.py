@@ -2,6 +2,7 @@
 import threading
 import Queue
 from ..db.models import *
+from ..config import *
 
 class TagsSummarizingThread(threading.Thread):
     def __init__(self, areas_queue):
@@ -25,4 +26,10 @@ class TagsSummarizingThread(threading.Thread):
                 sum_count = HashtagFrequencySum.get_or_create(hashtag=tag_count.hashtag, area=area)
                 sum_count.count += tag_count.count
                 sum_count.save()
+
+        ignore = [] + COMMON_IGNORE
+        for tag in area.location.ignore_list:
+            ignore.append(tag.tag)
+        area.calc_most_popular_tag(ignore)
+
         print "Area {0} of {1} recalculated".format(area.id, area.location.name)

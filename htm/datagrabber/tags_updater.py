@@ -77,8 +77,12 @@ def update_tags(threads_count=100, memory=24 * 3600):
     # hope that putting is faster than processing
     areas_queue.join()
 
+    print 'Queue joint'
+
     for t in threads:
         t.stop()
+
+    print 'Threads stopping'
 
     for t in threads:
         t.join()

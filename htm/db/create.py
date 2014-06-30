@@ -19,10 +19,6 @@ def drop_tables():
         TagsOfAreaInHour.drop_table()
         print '-- TagsOfAreaInHour table dropped'
 
-    if Hashtag.table_exists():
-    	Hashtag.drop_table()
-    	print '-- Hashtag table dropped'
-
     if SimpleArea.table_exists():
     	SimpleArea.drop_table()
     	print '-- SimpleArea table dropped'
@@ -35,6 +31,10 @@ def drop_tables():
     	Location.drop_table()
 	print '-- Location table dropped'
 
+    if Hashtag.table_exists():
+        Hashtag.drop_table()
+        print '-- Hashtag table dropped'
+
 
 def create_tables():
     Location.create_table()
@@ -43,11 +43,11 @@ def create_tables():
     IgnoreForLocation.create_table()
     print '++ IgnoreForLocation table created'
 
-    SimpleArea.create_table()
-    print '++ SimpleArea table created'
-
     Hashtag.create_table()
     print '++ Hashtag table created'
+
+    SimpleArea.create_table()
+    print '++ SimpleArea table created'
 
     TagsOfAreaInHour.create_table()
     print '++ TagsOfAreaInHour table created'

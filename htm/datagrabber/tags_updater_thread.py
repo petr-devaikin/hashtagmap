@@ -32,15 +32,13 @@ class TagsUpdaterThread(threading.Thread):
             try:
                 if not self.__pass_everything:
                     self.update_tags_for_area(area)
-                self.queue.task_done()
             except:
                 print "Area {0} is not processed".format(area.id)
-                self.queue.put(area)
                 if not self.__change_client():
                     self.__pass_everything = True
                     print "Instagram banned me :("
             finally:
-                pass
+                self.queue.task_done()
 
     __pass_everything = False
     __current_client = 0
