@@ -24,11 +24,15 @@ def hello_world():
     areas = location.simple_areas
     max_count = 0
     print 'Done1'
-    moscow_ignore = [u'moscow', u'москва', u'russia', u'россия', u'vscorussia']
+
+    ignore = [] + config.COMMON_IGNORE
+    for tag in location.ignore_list:
+        ignore.append(tag.tag)
+
     for a in areas:
-        if a.most_popular_tag(config.COMMON_IGNORE + moscow_ignore) != None and \
-                a.most_popular_tag().count_sum > max_count:
-            max_count = a.most_popular_tag().count_sum
+        if a.most_popular_tag(ignore) != None and \
+                a.most_popular_tag().count > max_count:
+            max_count = a.most_popular_tag().count
     print 'Done2'
     return render_template('index.html', areas=areas, max_count=max_count, lat_km=lat_km, \
         long_km=long_km)

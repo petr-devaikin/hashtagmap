@@ -10,6 +10,10 @@ def drop_tables():
     if HashtagFrequency.table_exists():
         HashtagFrequency.drop_table()
         print '-- HashtagFrequency table dropped'
+
+    if HashtagFrequencySum.table_exists():
+        HashtagFrequencySum.drop_table()
+        print '-- HashtagFrequencySum table dropped'
         
     if TagsOfAreaInHour.table_exists():
         TagsOfAreaInHour.drop_table()
@@ -22,6 +26,10 @@ def drop_tables():
     if SimpleArea.table_exists():
     	SimpleArea.drop_table()
     	print '-- SimpleArea table dropped'
+        
+    if IgnoreForLocation.table_exists():
+        IgnoreForLocation.drop_table()
+    print '-- IgnoreForLocation table dropped'
 
     if Location.table_exists():
     	Location.drop_table()
@@ -31,6 +39,9 @@ def drop_tables():
 def create_tables():
     Location.create_table()
     print '++ Location table created'
+
+    IgnoreForLocation.create_table()
+    print '++ IgnoreForLocation table created'
 
     SimpleArea.create_table()
     print '++ SimpleArea table created'
@@ -43,6 +54,9 @@ def create_tables():
 
     HashtagFrequency.create_table()
     print '++ HashtagFrequency table created'
+
+    HashtagFrequencySum.create_table()
+    print '++ HashtagFrequencySum table created'
 
 
 def init_data():

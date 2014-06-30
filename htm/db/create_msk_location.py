@@ -7,6 +7,11 @@ def create_msk_location():
 		height=56132, north_width=44181, south_width=44756)
 	print "+++ Moscow location created"
 
+
+	for tag in [u'moscow', u'москва', u'russia', u'россия', u'vscorussia']:
+		IgnoreForLocation.create(location=msk, tag=tag)
+
+
 	radius = 500
 
 	lat_km = (msk.north - msk.south) / msk.height * 1000

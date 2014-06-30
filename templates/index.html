@@ -10,9 +10,9 @@
                 <div class="tag-area" 
                         longitude="{{ area.longitude }}"
                         latitude="{{ area.latitude }}"
-                        count="{{ area.most_popular_tag().count_sum }}" 
+                        count="{{ area.most_popular_tag().count }}" 
                         radius="{{ area.radius }}">
-                    {{ area.most_popular_tag().name }}
+                    {{ area.most_popular_tag().hashtag.name }}
                 </div>
             {% endif %}
         {% endfor %}

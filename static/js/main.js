@@ -3,10 +3,10 @@ var MIN_LONGITUDE = 37.235253;
 var MAX_LATITUDE = 55.996804;
 var MAX_LONGITUDE = 37.945527;
 
-var MIN_OPACITY = 0;
+var MIN_OPACITY = 0.2;
 var MAX_OPACITY = 1;
 
-var PIXELS_PER_KM = 15;
+var PIXELS_PER_KM = 35;
 
 window.onload = function() {
     var areas = document.getElementsByClassName('tag-area');
@@ -19,8 +19,8 @@ window.onload = function() {
 
         areas[i].style.left = area_long_km * PIXELS_PER_KM + "px";
         areas[i].style.top = area_lat_km * PIXELS_PER_KM + "px";
-        areas[i].style.width = area_radius / 1000 * 2 * PIXELS_PER_KM - 5 + "px";
-        areas[i].style.height = area_radius / 1000 * 2 * PIXELS_PER_KM - 5 + "px";
+        areas[i].style.width = area_radius / 1000 * 2 * PIXELS_PER_KM + "px";
+        areas[i].style.height = area_radius / 1000 * 2 * PIXELS_PER_KM + "px";
         areas[i].style.opacity = MAX_OPACITY -
             (maximum_count - parseFloat(areas[i].getAttribute('count'))) / maximum_count *
             (MAX_OPACITY - MIN_OPACITY);

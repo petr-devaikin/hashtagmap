@@ -8,6 +8,8 @@ body {
     font-size: 12px;
     border: 1px dotted silver;
     word-wrap: break-word;
+    text-transform: uppercase;
+    line-height: 80%;
 }
 
 .tag-area.count {

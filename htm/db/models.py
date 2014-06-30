@@ -33,7 +33,13 @@ class Location(Model):
             self.updated = all_hours.first().max_stamp
         self.save()
 
+    class Meta:
+        database = db
 
+
+class IgnoreForLocation(Model):
+    tag = CharField()
+    location = ForeignKeyField(Location, related_name='ignore_list')
 
     class Meta:
         database = db
@@ -49,33 +55,19 @@ class SimpleArea(Model):
 
     def most_popular_tag(self, ignore=[]):
         if not hasattr(self, '__most_popular_tag__'):
-            if self.tags_in_hour.count() > 0:
-                count_sum = fn.Sum(HashtagFrequency.count)
-
-                sq = Hashtag.select(Hashtag, count_sum.alias('count_sum'))
-                join = sq.join(HashtagFrequency).join(TagsOfAreaInHour)
-                where = join.where((TagsOfAreaInHour.area == self), ~(Hashtag.name << ignore))
-                group = where.group_by(Hashtag).order_by(count_sum.desc())
-
-                self.__most_popular_tag__ = group.first()
-            else:
-                self.__most_popular_tag__ = None
+            sq = self.hashtag_counts_sum.join(Hashtag)
+            where = sq.where(~(Hashtag.name << ignore)).order_by(HashtagFrequencySum.count.desc())
+            self.__most_popular_tag__ = where.first()
         return self.__most_popular_tag__
 
     def count_of_tag(self, tag):
-        count_sum = fn.Sum(HashtagFrequency.count)
+        sq = self.hashtag_counts_sum.join(Hashtag).where(Hashtag.name == tag)
 
-        sq = Hashtag.select(Hashtag, count_sum.alias('count_sum'))
-        join = sq.join(HashtagFrequency).join(TagsOfAreaInHour)
-        where = join.where((TagsOfAreaInHour.area == self), Hashtag.name == tag)
-        group = where.group_by(Hashtag).order_by(count_sum.desc())
-
-        h = group.first()
+        h = sq.first()
         if h == None:
             return 0
         else:
-            return group.first().count_sum
-
+            return sq.first().count
 
     def add_connections(self):
         all_north = SimpleArea.select().where((SimpleArea.longitude == self.longitude) & \
@@ -106,6 +98,15 @@ class TagsOfAreaInHour(Model):
 
 class Hashtag(Model):
     name = CharField(unique=True)
+
+    class Meta:
+        database = db
+
+
+class HashtagFrequencySum(Model):
+    hashtag = ForeignKeyField(Hashtag, related_name='counts_sum')
+    area = ForeignKeyField(SimpleArea, related_name='hashtag_counts_sum')
+    count = IntegerField(default=0)
 
     class Meta:
         database = db
