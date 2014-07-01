@@ -5,6 +5,7 @@ from .insta_grabber import *
 from ..config import *
 import calendar
 from ..db.models import *
+import datetime
 
 class TagsUpdaterThread(threading.Thread):
     def __init__(self, areas_queue, db_lock):
@@ -27,13 +28,14 @@ class TagsUpdaterThread(threading.Thread):
         while not self.stopped():
             try:
                 area = self.queue.get(timeout=1)
-                #if not self._pass_everything:
-                print "Areas left: {0}".format(self.queue.qsize())
+                if not self._pass_everything:
+                    print "Areas left: {0}".format(self.queue.qsize())
 
                 try:
                     if not self._pass_everything:
                         self.update_tags_for_area(area)
-                except:
+                except Exception as ex:
+                    print ex
                     print "Area {0} is not processed".format(area.id)
                     if not self._change_client():
                         self._pass_everything = True
@@ -42,7 +44,6 @@ class TagsUpdaterThread(threading.Thread):
                     self.queue.task_done()
 
             except Queue.Empty:
-                print 'empty'
                 continue
 
     def _get_grabber(self):
