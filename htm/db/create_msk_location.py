@@ -8,7 +8,8 @@ def create_msk_location():
 	print "+++ Moscow location created"
 
 
-	for tag in [u'moscow', u'москва', u'russia', u'россия', u'vscorussia', u'vscomoscow']:
+	for tag in [u'moscow', u'москва', u'russia', u'россия', u'vscorussia', u'vscomoscow', \
+			u'msk', u'мск']:
 		IgnoreForLocation.create(location=msk, tag=tag)
 
 
