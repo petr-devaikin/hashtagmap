@@ -5,7 +5,9 @@ DB_PASSWORD = '123'
 
 COMMON_IGNORE = [u'instasize', u'love', \
     u'vsco', u'vscocam', u'vscophoto', u'vscogood', u'vscobest', u'vscodaily' \
-    u'followme', u'followmeback']
+    u'vscoonly', u'vscophoto', \
+    u'followme', u'followmeback', u'followhim', \
+    u'instamood', u'instagood']
 
 LOGINS = [ \
     { 'CLIENT_ID': '481e09aee5ac415db7353070f1d03173', \
