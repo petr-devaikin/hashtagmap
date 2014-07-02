@@ -6,7 +6,7 @@ body {
 .tag-area {
     position: absolute;
     font-size: 12px;
-    border: 1px dotted silver;
+    border: none;
     word-wrap: break-word;
     text-transform: uppercase;
     line-height: 80%;
