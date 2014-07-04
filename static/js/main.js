@@ -1,13 +1,13 @@
-var MIN_LATITUDE = 55.492144;
+var MIN_LATITUDE = 55.485;
 var MAX_LATITUDE = 56.004;
 
 var MIN_LONGITUDE = 37.225;
-var MAX_LONGITUDE = 37.945527;
+var MAX_LONGITUDE = 37.957;
 
 var MAP_ZOOM = 12;
 var MAP_KEY = "AIzaSyDE8uiKRdzwQYYC6Wgr8HfFUh5MeikND88";
 
-var MIN_OPACITY = 0.4;
+var MIN_OPACITY = 0.2;
 var MAX_OPACITY = 1;
 
 var MAP_WIDTH = 640;
@@ -21,7 +21,7 @@ var PIXELS_PER_LATITUDE = MAP_WIDTH / MAP_LATITUDE;
 var PIXELS_PER_LONGITUDE = MAP_HEIGHT / MAP_LONGITUDE;
 
 var FONT_FAMILY = 'Arial';
-var AREA_PADDING = 2;
+var AREA_PADDING = 3;
 
 function get_position(latitude, longitude) {
     return [PIXELS_PER_LONGITUDE * (longitude - MIN_LONGITUDE),
@@ -34,6 +34,7 @@ function km_to_pixels(width, height) {
 }
 
 window.onload = function() {
+    set_full_map_size();
     add_backgroud();
 
     var test_canvas = document.getElementById('test_canvas');

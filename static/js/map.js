@@ -2,7 +2,7 @@ function get_map_url(latitude, longitude) {
     return "http://maps.googleapis.com/maps/api/staticmap?center=" +
         latitude + "," + longitude + "&zoom=" + MAP_ZOOM + "&scale=2" +
         "&size=" + MAP_WIDTH + "x" + MAP_HEIGHT + "&maptype=roadmap" +
-        "&style=element:labels%7Cvisibility:off&key=" + MAP_KEY;
+        "&style=element:labels%7Cvisibility:off&style=saturation:0&key=" + MAP_KEY;
 }
 
 function create_img(latitude, longitude) {
@@ -31,4 +31,10 @@ function add_backgroud() {
         longitude += MAP_LONGITUDE;
         x += MAP_WIDTH;
     }
+}
+
+function set_full_map_size() {
+    var size = get_position(MIN_LATITUDE, MAX_LONGITUDE);
+    document.getElementById("map_container").style.width = size[0] + "px";
+    document.getElementById("map_container").style.height = size[1] + "px";
 }

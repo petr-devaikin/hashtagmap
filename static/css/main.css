@@ -11,6 +11,7 @@ body {
     text-transform: uppercase;
     line-height: 80%;
     overflow: hidden;
+    background: rgba(255,255,255,0.7);
 }
 
 .tag-area.count {
@@ -22,6 +23,7 @@ body {
     position: absolute;
     left: 0px;
     top: 0px;
+    overflow: hidden;
 }
 
 .map_part {
