@@ -1,27 +1,52 @@
 var MIN_LATITUDE = 55.492144;
-var MIN_LONGITUDE = 37.235253;
-var MAX_LATITUDE = 55.996804;
+var MAX_LATITUDE = 56.004;
+
+var MIN_LONGITUDE = 37.225;
 var MAX_LONGITUDE = 37.945527;
 
-var MIN_OPACITY = 0.2;
+var MAP_ZOOM = 12;
+var MAP_KEY = "AIzaSyDE8uiKRdzwQYYC6Wgr8HfFUh5MeikND88";
+
+var MIN_OPACITY = 0.4;
 var MAX_OPACITY = 1;
 
+var MAP_WIDTH = 640;
+var MAP_HEIGHT = 640;
+
+var MAP_LATITUDE = 0.1237;
+var MAP_LONGITUDE = 0.2196; // 92 - 94
+
 var PIXELS_PER_KM = 35;
+var PIXELS_PER_LATITUDE = MAP_WIDTH / MAP_LATITUDE;
+var PIXELS_PER_LONGITUDE = MAP_HEIGHT / MAP_LONGITUDE;
 
 var FONT_FAMILY = 'Arial';
 var AREA_PADDING = 2;
 
+function get_position(latitude, longitude) {
+    return [PIXELS_PER_LONGITUDE * (longitude - MIN_LONGITUDE),
+        PIXELS_PER_LATITUDE * (MAX_LATITUDE - latitude)];
+}
+
+function km_to_pixels(width, height) {
+    return [long_km * width * PIXELS_PER_LONGITUDE,
+        lat_km * height * PIXELS_PER_LATITUDE];
+}
+
 window.onload = function() {
+    add_backgroud();
+
     var test_canvas = document.getElementById('test_canvas');
     var test_context = test_canvas.getContext("2d");
 
     var areas = document.getElementsByClassName('tag-area');
     for (i = 0; i < areas.length; i++) {
         var area_radius = parseInt(areas[i].getAttribute('radius'));
-        var area_lat = MAX_LATITUDE - parseFloat(areas[i].getAttribute('latitude'));
-        var area_long = parseFloat(areas[i].getAttribute('longitude')) - MIN_LONGITUDE;
-        var area_lat_km = area_lat / lat_km;
-        var area_long_km = area_long / long_km;
+        var area_lat = parseFloat(areas[i].getAttribute('latitude'));
+        var area_long = parseFloat(areas[i].getAttribute('longitude'));
+        var area_position = get_position(area_lat, area_long);
+        //var area_lat_km = area_lat / lat_km;
+        //var area_long_km = area_long / long_km;
         var tag = areas[i].getAttribute('tag').toUpperCase();
         var tags_count =  parseFloat(areas[i].getAttribute('count'));
         var canvas_id = areas[i].getAttribute('area-id');
@@ -30,8 +55,9 @@ window.onload = function() {
             (maximum_count - tags_count) /
             maximum_count * (MAX_OPACITY - MIN_OPACITY);
 
-        var area_width = area_radius / 1000.0 * 2 * PIXELS_PER_KM - 2 * AREA_PADDING;
-        var area_height = area_radius / 1000.0 * 2 * PIXELS_PER_KM - 2 * AREA_PADDING;
+        var area_size = km_to_pixels(area_radius / 1000.0 * 2, area_radius / 1000.0 * 2);
+        var area_width = area_size[0] - 2 * AREA_PADDING;
+        var area_height = area_size[1] - 2 * AREA_PADDING;
 
         var lines = fit_word(tag, area_width, area_height, 24, test_context);
         var shortest_word = find_shortest_word(lines, 24, test_context);
@@ -53,9 +79,8 @@ window.onload = function() {
             context.fillText(lines[j], 0, font_size * j, shortest_word_width);
         }
 
-
-        areas[i].style.left = area_long_km * PIXELS_PER_KM + AREA_PADDING + "px";
-        areas[i].style.top = area_lat_km * PIXELS_PER_KM + AREA_PADDING + "px";
+        areas[i].style.left = area_position[0] - area_size[0] / 2 + AREA_PADDING + "px";
+        areas[i].style.top = area_position[1] - area_size[1] / 2 + AREA_PADDING + "px";
         areas[i].style.width = area_width + "px";
         areas[i].style.height = area_height + "px";
 

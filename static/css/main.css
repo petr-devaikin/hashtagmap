@@ -17,3 +17,16 @@ body {
     background: black;
     border: none;
 }
+
+#map_container {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.map_part {
+    position: absolute;
+    width: 640px;
+    height: 640px;
+    opacity: 1;
+}

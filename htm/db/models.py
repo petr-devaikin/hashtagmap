@@ -14,6 +14,12 @@ class Location(Model):
     south_width = IntegerField()
     updated = DateTimeField(null=True)
 
+    def latitude(self):
+        return (self.north + self.south) / 2
+
+    def longitude(self):
+        return (self.west + self.east) / 2
+
     def clear_old_hours(self, min_time):
         hours_to_clear = TagsOfAreaInHour.select().where(TagsOfAreaInHour.area << self.simple_areas, 
             TagsOfAreaInHour.max_stamp < min_time)
