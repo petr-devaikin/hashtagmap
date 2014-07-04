@@ -4,8 +4,8 @@ DB_USER = 'hashtag'
 DB_PASSWORD = '123'
 
 COMMON_IGNORE = [u'instasize', u'love', \
-    u'vsco', u'vscocam', u'vscophoto', u'vscogood', u'vscobest', u'vscodaily' \
-    u'vscoonly', u'vscophoto', u'vscom', u'vscocamera', u'vscoawar', u'vscostyle' \
+    u'vsco', u'vscocam', u'vscophoto', u'vscogood', u'vscobest', u'vscodaily', u'vscolike' \
+    u'vscoonly', u'vscophoto', u'vscom', u'vscocamera', u'vscoawar', u'vscostyle', u'vscovibe' \
     u'follow', u'followme', u'followmeback', u'followhim', \
     u'instamood', u'instagood', u'instagram', u'instatags4likes', \
     u'tagsforlikes']

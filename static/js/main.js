@@ -1,5 +1,5 @@
 var MIN_LATITUDE = 55.485;
-var MAX_LATITUDE = 56.004;
+var MAX_LATITUDE = 56.01;
 
 var MIN_LONGITUDE = 37.225;
 var MAX_LONGITUDE = 37.957;
@@ -20,7 +20,7 @@ var PIXELS_PER_KM = 35;
 var PIXELS_PER_LATITUDE = MAP_WIDTH / MAP_LATITUDE;
 var PIXELS_PER_LONGITUDE = MAP_HEIGHT / MAP_LONGITUDE;
 
-var FONT_FAMILY = 'Arial';
+var FONT_FAMILY = 'sans serif';
 var AREA_PADDING = 4;
 
 function get_position(latitude, longitude) {
@@ -176,8 +176,8 @@ function width_of_word(word, font_size, context) {
 }
 
 function getColor(opacity) {
-    var r = Math.floor(105 * Math.sqrt(opacity) + 170);
-    var g = Math.floor(170 - 170 * Math.sqrt(opacity));
+    var r = Math.floor(125 * Math.sqrt(opacity) + 120);
+    var g = Math.floor(120 - 120 * Math.sqrt(opacity));
     var b = g;
     return 'rgb(' + r + ',' + g + ',' + b + ')';
     //var c = Math.floor(255 - 255 * opacity);
@@ -206,6 +206,18 @@ function set_scroll() {
         oldY = 0;
         oldX = 0;
         is_mouse_down = false;
+
+        if (marginTop > 0)
+            marginTop = 0;
+        if (marginTop + main_height < window.innerHeight)
+            marginTop = window.innerHeight - main_height;
+        if (marginLeft > 0)
+            marginLeft = 0;
+        if (marginLeft + main_width < window.innerWidth)
+            marginLeft = window.innerWidth - main_width;
+
+        move_map(true);
+
         return false;
     };
     document.onmousemove = function(e) {
@@ -214,14 +226,6 @@ function set_scroll() {
             var newX = e.pageX;
             marginTop += newY - oldY;
             marginLeft += newX - oldX;
-            if (marginTop > 0)
-                marginTop = 0;
-            if (marginTop + main_height < window.innerHeight)
-                marginTop = window.innerHeight - main_height;
-            if (marginLeft > 0)
-                marginLeft = 0;
-            if (marginLeft + main_width < window.innerWidth)
-                marginLeft = window.innerWidth - main_width;
             oldY = newY;
             oldX = newX;
             move_map();
@@ -236,7 +240,15 @@ function move_map_to_center() {
     move_map();
 }
 
-function move_map() {
-    main_container.style.top = marginTop + "px";
-    main_container.style.left = marginLeft + "px";
+function move_map(animation) {
+    $(main_container).stop();
+    if (animation)
+        $(main_container).animate({
+            top: marginTop,
+            left: marginLeft
+        }, "medium");
+    else {
+        main_container.style.top = marginTop + "px";
+        main_container.style.left = marginLeft + "px";
+    }
 }
