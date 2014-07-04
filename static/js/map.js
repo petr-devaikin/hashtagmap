@@ -2,12 +2,13 @@ function get_map_url(latitude, longitude) {
     return "http://maps.googleapis.com/maps/api/staticmap?center=" +
         latitude + "," + longitude + "&zoom=" + MAP_ZOOM + "&scale=2" +
         "&size=" + MAP_WIDTH + "x" + MAP_HEIGHT + "&maptype=roadmap" +
-        "&style=element:labels%7Cvisibility:off&style=saturation:0&key=" + MAP_KEY;
+        "&style=element:labels%7Cvisibility:off&style=saturation:-20&style=lightness:-10&key=" + MAP_KEY;
 }
 
 function create_img(latitude, longitude) {
-    var img = document.createElement('img');
-    img.setAttribute('src', get_map_url(latitude, longitude));
+    var img = document.createElement('div');
+    img.style.background = "url('" + get_map_url(latitude, longitude) + "') 0 0 no-repeat";
+    img.style.backgroundSize = MAP_WIDTH + "px " + MAP_WIDTH + "px";
     img.classList.add("map_part");
     return img;
 }
@@ -35,6 +36,10 @@ function add_backgroud() {
 
 function set_full_map_size() {
     var size = get_position(MIN_LATITUDE, MAX_LONGITUDE);
-    document.getElementById("map_container").style.width = size[0] + "px";
-    document.getElementById("map_container").style.height = size[1] + "px";
+    var map = document.getElementById("map_container");
+    var main = document.getElementById("main_container");
+    map.style.width = size[0] + "px";
+    map.style.height = size[1] + "px";
+    main.style.width = size[0] + "px";
+    main.style.height = size[1] + "px";
 }

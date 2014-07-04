@@ -7,7 +7,7 @@ var MAX_LONGITUDE = 37.957;
 var MAP_ZOOM = 12;
 var MAP_KEY = "AIzaSyDE8uiKRdzwQYYC6Wgr8HfFUh5MeikND88";
 
-var MIN_OPACITY = 0.2;
+var MIN_OPACITY = 0;
 var MAX_OPACITY = 1;
 
 var MAP_WIDTH = 640;
@@ -21,7 +21,7 @@ var PIXELS_PER_LATITUDE = MAP_WIDTH / MAP_LATITUDE;
 var PIXELS_PER_LONGITUDE = MAP_HEIGHT / MAP_LONGITUDE;
 
 var FONT_FAMILY = 'Arial';
-var AREA_PADDING = 3;
+var AREA_PADDING = 4;
 
 function get_position(latitude, longitude) {
     return [PIXELS_PER_LONGITUDE * (longitude - MIN_LONGITUDE),
@@ -89,6 +89,9 @@ window.onload = function() {
         canvas.style.height = 2 * area_height + "px";
         //canvas.style.height = area_radius / 1000 * 2 * PIXELS_PER_KM + "px";
     }
+
+    set_scroll();
+    move_map_to_center();
 }
 
 function fit_word(word, width, height, font_size, context) {
@@ -173,6 +176,67 @@ function width_of_word(word, font_size, context) {
 }
 
 function getColor(opacity) {
-    var c = Math.floor(255 - 255 * opacity);
-    return 'rgb(' + c + ',' + c + ',' + c + ')';
+    var r = Math.floor(105 * Math.sqrt(opacity) + 170);
+    var g = Math.floor(170 - 170 * Math.sqrt(opacity));
+    var b = g;
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+    //var c = Math.floor(255 - 255 * opacity);
+    //return 'rgb(' + c + ',' + c + ',' + c + ')';
+}
+
+var is_mouse_down = false;
+var oldY = 0;
+var oldX = 0;
+var marginTop = 0;
+var marginLeft = 0;
+
+function set_scroll() {
+    var main_container = document.getElementById("main_container");
+    var main_width = main_container.offsetWidth;
+    var main_height = main_container.offsetHeight;
+
+    var map = document.getElementById("map_container");
+    document.onmousedown = function(e) {
+        is_mouse_down = true;
+        oldY = e.pageY;
+        oldX = e.pageX;
+        return false;
+    };
+    document.onmouseup = function(e) {
+        oldY = 0;
+        oldX = 0;
+        is_mouse_down = false;
+        return false;
+    };
+    document.onmousemove = function(e) {
+        if (is_mouse_down) {
+            var newY = e.pageY;
+            var newX = e.pageX;
+            marginTop += newY - oldY;
+            marginLeft += newX - oldX;
+            if (marginTop > 0)
+                marginTop = 0;
+            if (marginTop + main_height < window.innerHeight)
+                marginTop = window.innerHeight - main_height;
+            if (marginLeft > 0)
+                marginLeft = 0;
+            if (marginLeft + main_width < window.innerWidth)
+                marginLeft = window.innerWidth - main_width;
+            oldY = newY;
+            oldX = newX;
+            move_map();
+        }
+    };
+}
+
+function move_map_to_center() {
+    var main_container = document.getElementById("main_container");
+    marginTop = -(main_container.offsetHeight - window.innerHeight) / 2;
+    marginLeft = -(main_container.offsetWidth - window.innerWidth) / 2;
+    move_map();
+}
+
+function move_map() {
+    main_container.style.top = marginTop + "px";
+    main_container.style.left = marginLeft + "px";
 }

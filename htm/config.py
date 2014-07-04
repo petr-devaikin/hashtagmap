@@ -5,7 +5,7 @@ DB_PASSWORD = '123'
 
 COMMON_IGNORE = [u'instasize', u'love', \
     u'vsco', u'vscocam', u'vscophoto', u'vscogood', u'vscobest', u'vscodaily' \
-    u'vscoonly', u'vscophoto', u'vscom', u'vscocamera', u'vscoawar' \
+    u'vscoonly', u'vscophoto', u'vscom', u'vscocamera', u'vscoawar', u'vscostyle' \
     u'follow', u'followme', u'followmeback', u'followhim', \
     u'instamood', u'instagood', u'instagram', u'instatags4likes', \
     u'tagsforlikes']

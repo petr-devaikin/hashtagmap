@@ -1,6 +1,15 @@
 body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
+}
+
+#main_container {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    overflow: hidden;
+    cursor: pointer;
 }
 
 .tag-area {
