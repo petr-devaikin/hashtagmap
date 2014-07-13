@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, make_response
-from htm.db.models import *
-from htm import config
 
 # configure
-DEBUG = True
-SECRET_KEY = 'development key'
-
 app = Flask(__name__)
-app.config.from_object(app)
+app.config.from_object('htm.default_settings')
+app.config.from_envvar('HASHTAGMAP_SETTINGS', silent=True)
 
 # init db
-db.init(config.DB_NAME, user=config.DB_USER, password=config.DB_PASSWORD)
+from htm.db.models import *
+db.init(app.config['DB_NAME'], user=app.config['DB_USER'], password=app.config['DB_PASSWORD'])
+
 
 @app.route('/')
 def hello_world():
@@ -46,6 +44,3 @@ def counts(tag_name):
     print 'Done2'
     return render_template('counts.html', areas=areas, max_count=max_count, lat_km=lat_km, \
         long_km=long_km, location=location)
-
-if __name__ == '__main__':
-    app.run(debug=True)

@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+DEBUG = True
+SECRET_KEY = 'development key'
+
 DB_NAME = 'hashtag_map'
 DB_USER = 'hashtag'
 DB_PASSWORD = '123'

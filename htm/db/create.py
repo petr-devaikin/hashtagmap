@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-from .models import *
-from .create_msk_location import *
-from .create_areas_connections import *
-from .. import config
-
-db.init(config.DB_NAME, user=config.DB_USER, password=config.DB_PASSWORD)
+from models import *
+from create_msk_location import *
+from create_areas_connections import *
 
 def drop_tables():
     if HashtagFrequency.table_exists():
@@ -64,7 +61,7 @@ def init_data():
     create_areas_connections()
     
 
-def clear_database():
+def init_database():
     drop_tables()
     create_tables()
     init_data()
