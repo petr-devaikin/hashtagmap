@@ -2,9 +2,9 @@
 from flask import Flask, render_template, make_response
 
 # configure
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('htmapp.default_settings')
-app.config.from_envvar('HASHTAGMAP_SETTINGS', silent=True)
+app.config.from_pyfile('application.cfg', silent=True)
 
 # init db
 from htmapp.db.models import *
