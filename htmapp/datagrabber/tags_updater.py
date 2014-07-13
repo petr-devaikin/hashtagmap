@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 import time
 import datetime
-from ..db.models import *
-from ..config import *
-from .tags_updater_thread import TagsUpdaterThread
-from .tags_summarizing_thread import TagsSummarizingThread
+from htmapp.db.models import *
+from tags_updater_thread import TagsUpdaterThread
+from tags_summarizing_thread import TagsSummarizingThread
 import threading
 import Queue
 
 
 def summarize_tags(threads_count=100):
-    db.init(DB_NAME, user=DB_USER, password=DB_PASSWORD)
     print 'Summarizing start'
 
     areas_queue = Queue.Queue()
@@ -32,8 +30,6 @@ def summarize_tags(threads_count=100):
 
 
 def update_tags(threads_count=100, memory=24 * 3600):
-    db.init(DB_NAME, user=DB_USER, password=DB_PASSWORD)
-
     areas_queue = Queue.Queue()
     lock = threading.Lock()
 

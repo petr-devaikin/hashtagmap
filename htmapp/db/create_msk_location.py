@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from models import *
+from htmapp.db.models import *
 
 def create_msk_location():
 	msk = Location.create(name=u'Moscow', \

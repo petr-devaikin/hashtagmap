@@ -3,11 +3,11 @@ from flask import Flask, render_template, make_response
 
 # configure
 app = Flask(__name__)
-app.config.from_object('htm.default_settings')
+app.config.from_object('htmapp.default_settings')
 app.config.from_envvar('HASHTAGMAP_SETTINGS', silent=True)
 
 # init db
-from htm.db.models import *
+from htmapp.db.models import *
 db.init(app.config['DB_NAME'], user=app.config['DB_USER'], password=app.config['DB_PASSWORD'])
 
 

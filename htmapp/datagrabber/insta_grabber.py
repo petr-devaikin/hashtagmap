@@ -6,7 +6,6 @@ import operator
 class InstaGrabber:
     MAX_SEARCH_COUNT = 100
 
-
     def __init__(self, client_id, client_secret):
         self.__api = InstagramAPI(client_id=client_id, client_secret=client_secret)
 

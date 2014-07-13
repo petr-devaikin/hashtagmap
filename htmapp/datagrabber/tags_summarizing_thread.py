@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import threading
 import Queue
-from ..db.models import *
-from ..config import *
+from htmapp.db.models import *
 
 class TagsSummarizingThread(threading.Thread):
     def __init__(self, areas_queue):

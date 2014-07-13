@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask.ext.script import Manager
-from htm.web.app import app
+from htmapp.web.app import app
 #from htm.database import init_db
 
 manager = Manager(app)

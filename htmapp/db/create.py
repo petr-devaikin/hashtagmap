@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from models import *
+from htmapp.db.models import *
 from create_msk_location import *
 from create_areas_connections import *
 

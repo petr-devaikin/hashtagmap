@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import threading
 import Queue
-from .insta_grabber import *
-from ..config import *
+from insta_grabber import *
+from htmapp.db.models import *
 import calendar
-from ..db.models import *
 import datetime
 
 class TagsUpdaterThread(threading.Thread):

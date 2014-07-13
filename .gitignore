@@ -2,4 +2,5 @@
 *~
 *.db
 venv/
+instance/
 *.egg-info
