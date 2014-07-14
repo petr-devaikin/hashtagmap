@@ -7,10 +7,11 @@ import calendar
 import datetime
 
 class TagsUpdaterThread(threading.Thread):
-    def __init__(self, areas_queue, db_lock):
+    def __init__(self, areas_queue, db_lock, logins):
         super(TagsUpdaterThread, self).__init__()
         self.queue = areas_queue
         self.db_lock = db_lock
+        self.logins = logins
         self.grabber = self._get_grabber()
         self._stop = threading.Event()
     
@@ -46,12 +47,12 @@ class TagsUpdaterThread(threading.Thread):
                 continue
 
     def _get_grabber(self):
-        return InstaGrabber(LOGINS[self._current_client]['CLIENT_ID'], \
-            LOGINS[self._current_client]['CLIENT_SECRET'])
+        return InstaGrabber(self.logins[self._current_client]['CLIENT_ID'],
+            self.logins[self._current_client]['CLIENT_SECRET'])
 
     def _change_client(self):
         self._current_client += 1
-        if len(LOGINS) <= self._current_client:
+        if len(self.logins) <= self._current_client:
             return False
         else:
             self.grabber = self._get_grabber()

@@ -2,7 +2,7 @@ function get_map_url(latitude, longitude) {
     return "http://maps.googleapis.com/maps/api/staticmap?center=" +
         latitude + "," + longitude + "&zoom=" + MAP_ZOOM + "&scale=2" +
         "&size=" + MAP_WIDTH + "x" + MAP_HEIGHT + "&maptype=roadmap" +
-        "&style=element:labels%7Cvisibility:off&style=saturation:-20&style=lightness:-10&key=" + MAP_KEY;
+        "&style=element:labels%7Cvisibility:off&style=saturation:-20&style=lightness:-10&key=" + map_key;
 }
 
 function create_img(latitude, longitude) {

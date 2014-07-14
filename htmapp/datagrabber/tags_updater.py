@@ -4,6 +4,7 @@ import datetime
 from htmapp.db.models import *
 from tags_updater_thread import TagsUpdaterThread
 from tags_summarizing_thread import TagsSummarizingThread
+from flask import current_app
 import threading
 import Queue
 
@@ -35,13 +36,13 @@ def update_tags(threads_count=100, memory=24 * 3600):
 
     threads = []
     for i in range(threads_count):
-        t = TagsUpdaterThread(areas_queue, lock)
+        t = TagsUpdaterThread(areas_queue, lock, current_app.config['LOGINS'])
         threads.append(t)
         t.start()
 
     now = datetime.datetime.now()
     last_memory_time = now - datetime.timedelta(seconds=memory)
-    small_delta = datetime.timedelta(seconds=TIME_DELTA)
+    small_delta = datetime.timedelta(seconds=current_app.config['TAGS_TIME_PERIOD'])
 
     for location in Location.select():
         location.clear_old_hours(last_memory_time)

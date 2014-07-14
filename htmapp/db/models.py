@@ -60,8 +60,8 @@ class Hashtag(Model):
 
 class SimpleArea(Model):
     location = ForeignKeyField(Location, related_name='simple_areas')
-    to_north = ForeignKeyField('self', related_name='to_south', null=True)
-    to_west = ForeignKeyField('self', related_name='to_east', null=True)
+    column = IntegerField()
+    row = IntegerField()
     most_popular_tag_name = CharField(null=True)
     most_popular_tag_count = IntegerField(null=True)
     latitude = DoubleField()
@@ -88,19 +88,6 @@ class SimpleArea(Model):
             return 0
         else:
             return sq.first().count
-
-    def add_connections(self):
-        all_north = SimpleArea.select().where((SimpleArea.longitude == self.longitude) & \
-            (SimpleArea.latitude > self.latitude) & (SimpleArea.location == self.location))
-        if all_north.count() > 0:
-        	self.to_north = all_north.order_by(SimpleArea.latitude).get()
-
-        all_west = SimpleArea.select().where((SimpleArea.latitude == self.latitude) & \
-            (SimpleArea.longitude < self.longitude) & (SimpleArea.location == self.location))
-        if all_west.count() > 0:
-        	self.to_west = all_west.order_by(SimpleArea.longitude.desc()).get()
-
-        self.save()
 
     class Meta:
         database = db

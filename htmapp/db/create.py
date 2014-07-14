@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from htmapp.db.models import *
 from create_msk_location import *
-from create_areas_connections import *
 
 def drop_tables():
     if HashtagFrequency.table_exists():
@@ -58,7 +57,6 @@ def create_tables():
 
 def init_data():
     create_msk_location()
-    create_areas_connections()
     
 
 def init_database():

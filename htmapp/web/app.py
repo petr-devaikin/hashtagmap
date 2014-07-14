@@ -21,10 +21,12 @@ def hello_world():
 
     areas = location.simple_areas
     max_count = location.simple_areas.order_by(SimpleArea.most_popular_tag_count.desc()).first().most_popular_tag_count
+    if max_count == None:
+        max_count = 0
     return render_template('index.html', areas=areas, max_count=max_count, lat_km=lat_km, \
-        long_km=long_km, location=location)
+        long_km=long_km, location=location, map_key=app.config['GOOGLE_MAP_KEY'])
 
-
+"""
 @app.route('/<tag_name>')
 def counts(tag_name):
     location = Location.get()
@@ -44,3 +46,4 @@ def counts(tag_name):
     print 'Done2'
     return render_template('counts.html', areas=areas, max_count=max_count, lat_km=lat_km, \
         long_km=long_km, location=location)
+"""

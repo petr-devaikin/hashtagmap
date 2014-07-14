@@ -5,7 +5,6 @@ var MIN_LONGITUDE = 37.225;
 var MAX_LONGITUDE = 37.957;
 
 var MAP_ZOOM = 12;
-var MAP_KEY = "AIzaSyDE8uiKRdzwQYYC6Wgr8HfFUh5MeikND88";
 
 var MIN_OPACITY = 0;
 var MAX_OPACITY = 1;

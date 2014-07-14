@@ -14,6 +14,8 @@ COMMON_IGNORE = [u'instasize', u'love', \
     u'instamood', u'instagood', u'instagram', u'instatags4likes', u'likeforlike', u'like4like', u'instacollage' \
     u'tagsforlikes']
 
+GOOGLE_MAP_KEY = ''
+
 LOGINS = [{ 'CLIENT_ID': '', 'CLIENT_SECRET': '' }]
 
-TIME_DELTA = 3600
+TAGS_TIME_PERIOD = 3600
