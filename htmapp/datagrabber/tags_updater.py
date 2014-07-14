@@ -22,7 +22,7 @@ def summarize_tags(threads_count=100):
 
     threads = []
     for i in range(threads_count):
-        t = TagsSummarizingThread(areas_queue)
+        t = TagsSummarizingThread(areas_queue, current_app.config['COMMON_IGNORE'])
         threads.append(t)
         t.start()
 

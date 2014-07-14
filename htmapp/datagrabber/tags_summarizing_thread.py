@@ -4,9 +4,10 @@ import Queue
 from htmapp.db.models import *
 
 class TagsSummarizingThread(threading.Thread):
-    def __init__(self, areas_queue):
+    def __init__(self, areas_queue, common_ignore):
         super(TagsSummarizingThread, self).__init__()
         self.queue = areas_queue
+        self.common_ignore = common_ignore
 
     def run(self):
         while True:
@@ -26,7 +27,7 @@ class TagsSummarizingThread(threading.Thread):
                 sum_count.count += tag_count.count
                 sum_count.save()
 
-        ignore = [] + COMMON_IGNORE
+        ignore = [] + self.common_ignore
         for tag in area.location.ignore_list:
             ignore.append(tag.tag)
         area.calc_most_popular_tag(ignore)
