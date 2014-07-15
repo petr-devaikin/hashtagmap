@@ -10,6 +10,7 @@ app.config.from_pyfile('application.cfg', silent=True)
 from htmapp.db.models import *
 db.init(app.config['DB_NAME'], user=app.config['DB_USER'], password=app.config['DB_PASSWORD'])
 
+from htmapp.tags_processing.tags_grouper import TagsGrpouper
 
 @app.route('/')
 def hello_world():
@@ -23,6 +24,10 @@ def hello_world():
     max_count = location.simple_areas.order_by(SimpleArea.most_popular_tag_count.desc()).first().most_popular_tag_count
     if max_count == None:
         max_count = 0
+
+    grouper = TagsGrpouper(location.id)
+    groups = grouper.process()
+
     return render_template('index.html', areas=areas, max_count=max_count, lat_km=lat_km, \
         long_km=long_km, location=location, map_key=app.config['GOOGLE_MAP_KEY'])
 
