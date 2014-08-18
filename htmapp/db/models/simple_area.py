@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from htmapp.db.models.location import Location
+from htmapp.db.models.hashtag import Hashtag
 from peewee import *
 from htmapp.db.models.db_engine import get_db
 
@@ -14,18 +15,6 @@ class SimpleArea(Model):
     latitude = DoubleField()
     longitude = DoubleField()
     radius = IntegerField()
-
-    def calc_most_popular_tag(self, ignore=[]):
-        sq = self.hashtag_counts_sum.join(Hashtag)
-        where = sq.where(~(Hashtag.name << ignore)).order_by(HashtagFrequencySum.count.desc())
-        tag = where.first()
-        if tag == None:
-            self.most_popular_tag_name = None
-            self.most_popular_tag_count = None
-        else:
-            self.most_popular_tag_name = tag.hashtag.name
-            self.most_popular_tag_count = tag.count
-        self.save()
 
     def count_of_tag(self, tag):
         sq = self.hashtag_counts_sum.join(Hashtag).where(Hashtag.name == tag)

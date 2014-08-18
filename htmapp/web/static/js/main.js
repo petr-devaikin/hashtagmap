@@ -22,6 +22,8 @@ var PIXELS_PER_LONGITUDE = MAP_HEIGHT / MAP_LONGITUDE;
 var FONT_FAMILY = 'sans serif';
 var AREA_MARGIN = 4;
 
+var ALLOW_ROTATION = true;
+
 function get_position(latitude, longitude) {
     return [PIXELS_PER_LONGITUDE * (longitude - MIN_LONGITUDE),
         PIXELS_PER_LATITUDE * (MAX_LATITUDE - latitude)];
@@ -66,7 +68,7 @@ window.onload = function() {
         var area_height = area_padding[1] - 2 * AREA_MARGIN +
                         area_bottom_right_position[1] - area_top_left_position[1];
 
-        var rotate = area_width < area_height;
+        var rotate = area_width < area_height && ALLOW_ROTATION;
         if (rotate) {
             var tmp = area_width;
             area_width = area_height;
@@ -92,18 +94,23 @@ window.onload = function() {
 
         var context = canvas.getContext("2d");
         context.fillStyle = getColor(opacity);
-        context.textAlign = 'center';
+
+        if (rotate)
+            context.textAlign = 'center';
+        else
+            context.textAlign = 'left';
+
         context.textBaseline = 'top';
         context.font = font_size + 'px ' + FONT_FAMILY;
 
         var leftMargin = 0;
         if (rotate) {
             context.rotate(-Math.PI/2);
-            leftMargin = -area_width;
+            leftMargin = area_width / 2.0 - area_width;
         }
 
         for (var j = 0; j < lines.length; j++)
-            context.fillText(lines[j], area_width / 2.0 + leftMargin, font_size * j, shortest_word_width);
+            context.fillText(lines[j], leftMargin, font_size * j, shortest_word_width);
         
         if (rotate) {
             var tmp = area_width;

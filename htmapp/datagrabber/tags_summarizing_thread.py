@@ -2,6 +2,8 @@
 import threading
 import Queue
 from htmapp.db.models.hashtag_frequency_sum import HashtagFrequencySum
+from htmapp.db.models.hashtag import Hashtag
+from htmapp.db.models.ignore_for_location import IgnoreForLocation
 
 class TagsSummarizingThread(threading.Thread):
     def __init__(self, areas_queue, common_ignore):
@@ -19,6 +21,19 @@ class TagsSummarizingThread(threading.Thread):
             except Queue.Empty:
                 break
 
+    @staticmethod
+    def calc_most_popular_tag_for_area(area, ignore=[]):
+        sq = area.hashtag_counts_sum.join(Hashtag)
+        where = sq.where(~(Hashtag.name << ignore)).order_by(HashtagFrequencySum.count.desc())
+        tag = where.first()
+        if tag == None:
+            area.most_popular_tag_name = None
+            area.most_popular_tag_count = None
+        else:
+            area.most_popular_tag_name = tag.hashtag.name
+            area.most_popular_tag_count = tag.count
+        area.save()
+
 
     def recalc_tags_for_area(self, area):
         for hour in area.tags_in_hour:
@@ -30,6 +45,6 @@ class TagsSummarizingThread(threading.Thread):
         ignore = [] + self.common_ignore
         for tag in area.location.ignore_list:
             ignore.append(tag.tag)
-        area.calc_most_popular_tag(ignore)
+        TagsSummarizingThread.calc_most_popular_tag_for_area(area, ignore)
 
         print "Area {0} of {1} recalculated".format(area.id, area.location.name)
