@@ -14,7 +14,23 @@
             <div id="map_container"></div>
             <canvas id="test_canvas" width="100%"></canvas>
             
-            {% for area in areas %}
+            {% for group in groups %}
+                <div class="tag-area" 
+                        area-id="{{ group.id }}"
+                        north="{{ group.north }}"
+                        south="{{ group.south }}"
+                        west="{{ group.west }}"
+                        east="{{ group.east }}"
+                        count="{{ group.normal_count() }}" 
+                        radius="{{ group.radius }}"
+                        tag="{{ group.tag_name }}"
+                        title="{{ group.tag_name }}"
+                        >
+                    <canvas id="canvas_{{ group.id }}"></canvas>
+                </div>
+            {% endfor %}
+
+            {#% for area in areas %}
                 {% if area.most_popular_tag_count != None %}
                     <div class="tag-area" 
                             area-id="{{ area.id }}"
@@ -28,7 +44,7 @@
                         <canvas id="canvas_{{ area.id }}"></canvas>
                     </div>
                 {% endif %}
-            {% endfor %}
+            {% endfor %#}
         </div>
         <div id="header">
             <span id="copyright">

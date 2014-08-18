@@ -7,13 +7,16 @@ app.config.from_object('htmapp.default_settings')
 app.config.from_pyfile('application.cfg', silent=True)
 
 # init db
-from htmapp.db.models import *
+from htmapp.db.models.db_engine import get_db
+db = get_db()
 db.init(app.config['DB_NAME'], user=app.config['DB_USER'], password=app.config['DB_PASSWORD'])
 
 from htmapp.tags_processing.tags_grouper import TagsGrpouper
 
 @app.route('/')
 def hello_world():
+    from htmapp.db.models.location import Location
+    from htmapp.db.models.simple_area import SimpleArea
     location = Location.get()
 
     lat_km = (location.north - location.south) / location.height * 1000
@@ -28,8 +31,13 @@ def hello_world():
     grouper = TagsGrpouper(location.id)
     groups = grouper.process()
 
+    max_count = 0
+    for g in groups:
+        if g.normal_count() > max_count:
+            max_count = g.normal_count()
+
     return render_template('index.html', areas=areas, max_count=max_count, lat_km=lat_km, \
-        long_km=long_km, location=location, map_key=app.config['GOOGLE_MAP_KEY'])
+        long_km=long_km, location=location, groups=groups, map_key=app.config['GOOGLE_MAP_KEY'])
 
 """
 @app.route('/<tag_name>')

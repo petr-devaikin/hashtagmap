@@ -2,7 +2,10 @@
 import threading
 import Queue
 from insta_grabber import *
-from htmapp.db.models import *
+
+from htmapp.db.models.hashtag import Hashtag
+from htmapp.db.models.hashtag_frequency import HashtagFrequency
+
 import calendar
 import datetime
 

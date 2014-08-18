@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import time
 import datetime
-from htmapp.db.models import *
+
+from htmapp.db.models.hashtag_frequency_sum import HashtagFrequencySum
+from htmapp.db.models.location import Location
+from htmapp.db.models.simple_area import SimpleArea
+from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
+
 from tags_updater_thread import TagsUpdaterThread
 from tags_summarizing_thread import TagsSummarizingThread
 from flask import current_app

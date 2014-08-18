@@ -20,7 +20,7 @@ var PIXELS_PER_LATITUDE = MAP_WIDTH / MAP_LATITUDE;
 var PIXELS_PER_LONGITUDE = MAP_HEIGHT / MAP_LONGITUDE;
 
 var FONT_FAMILY = 'sans serif';
-var AREA_PADDING = 4;
+var AREA_MARGIN = 4;
 
 function get_position(latitude, longitude) {
     return [PIXELS_PER_LONGITUDE * (longitude - MIN_LONGITUDE),
@@ -42,9 +42,14 @@ window.onload = function() {
     var areas = document.getElementsByClassName('tag-area');
     for (i = 0; i < areas.length; i++) {
         var area_radius = parseInt(areas[i].getAttribute('radius'));
-        var area_lat = parseFloat(areas[i].getAttribute('latitude'));
-        var area_long = parseFloat(areas[i].getAttribute('longitude'));
-        var area_position = get_position(area_lat, area_long);
+        //var area_lat = parseFloat(areas[i].getAttribute('latitude'));
+        //var area_long = parseFloat(areas[i].getAttribute('longitude'));
+        var area_north = parseFloat(areas[i].getAttribute('north'));
+        var area_south = parseFloat(areas[i].getAttribute('south'));
+        var area_west = parseFloat(areas[i].getAttribute('west'));
+        var area_east = parseFloat(areas[i].getAttribute('east'));
+        var area_top_left_position = get_position(area_north, area_west);
+        var area_bottom_right_position = get_position(area_south, area_east);
         //var area_lat_km = area_lat / lat_km;
         //var area_long_km = area_long / long_km;
         var tag = areas[i].getAttribute('tag').toUpperCase();
@@ -55,9 +60,18 @@ window.onload = function() {
             (maximum_count - tags_count) /
             maximum_count * (MAX_OPACITY - MIN_OPACITY);
 
-        var area_size = km_to_pixels(area_radius / 1000.0 * 2, area_radius / 1000.0 * 2);
-        var area_width = area_size[0] - 2 * AREA_PADDING;
-        var area_height = area_size[1] - 2 * AREA_PADDING;
+        var area_padding = km_to_pixels(area_radius / 1000.0 * 2, area_radius / 1000.0 * 2);
+        var area_width = area_padding[0] - 2 * AREA_MARGIN +
+                        area_bottom_right_position[0] - area_top_left_position[0];
+        var area_height = area_padding[1] - 2 * AREA_MARGIN +
+                        area_bottom_right_position[1] - area_top_left_position[1];
+
+        var rotate = area_width < area_height;
+        if (rotate) {
+            var tmp = area_width;
+            area_width = area_height;
+            area_height = tmp;
+        }
 
         var lines = fit_word(tag, area_width, area_height, 24, test_context);
         var shortest_word = find_shortest_word(lines, 24, test_context);
@@ -66,8 +80,15 @@ window.onload = function() {
         var canvas = document.getElementById('canvas_' + canvas_id);
         // умножаем на 2, а то текст не пишется на границах
         var shortest_word_width = width_of_word(shortest_word, font_size, test_context)
-        canvas.setAttribute('width', 2 * shortest_word_width);
-        canvas.setAttribute('height', 2 * font_size * lines.length);
+
+        if (rotate) {
+            canvas.setAttribute('height', 2 * shortest_word_width);
+            canvas.setAttribute('width', 2 * font_size * lines.length);
+        }
+        else {
+            canvas.setAttribute('width', 2 * shortest_word_width);
+            canvas.setAttribute('height', 2 * font_size * lines.length);
+        }
 
         var context = canvas.getContext("2d");
         context.fillStyle = getColor(opacity);
@@ -75,17 +96,27 @@ window.onload = function() {
         context.textBaseline = 'top';
         context.font = font_size + 'px ' + FONT_FAMILY;
 
-        for (var j = 0; j < lines.length; j++) {
-            context.fillText(lines[j], 0, font_size * j, shortest_word_width);
+        if (rotate) {
+            context.rotate(-Math.PI/2);
+            var tmp = area_width;
+            area_width = area_height;
+            area_height = tmp;
+            for (var j = 0; j < lines.length; j++)
+                context.fillText(lines[j], -area_height, font_size * j, shortest_word_width);
         }
+        else
+            for (var j = 0; j < lines.length; j++)
+                context.fillText(lines[j], 0, font_size * j, shortest_word_width);
+        
 
-        areas[i].style.left = area_position[0] - area_size[0] / 2 + AREA_PADDING + "px";
-        areas[i].style.top = area_position[1] - area_size[1] / 2 + AREA_PADDING + "px";
+        areas[i].style.left = area_top_left_position[0] - area_padding[0] / 2 + AREA_MARGIN + "px";
+        areas[i].style.top = area_top_left_position[1] - area_padding[1] / 2 + AREA_MARGIN + "px";
         areas[i].style.width = area_width + "px";
         areas[i].style.height = area_height + "px";
 
         canvas.style.width = 2 * area_width + "px";
         canvas.style.height = 2 * area_height + "px";
+
         //canvas.style.height = area_radius / 1000 * 2 * PIXELS_PER_KM + "px";
     }
 

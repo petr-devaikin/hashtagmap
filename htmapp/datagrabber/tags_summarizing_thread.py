@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import threading
 import Queue
-from htmapp.db.models import *
+from htmapp.db.models.hashtag_frequency_sum import HashtagFrequencySum
 
 class TagsSummarizingThread(threading.Thread):
     def __init__(self, areas_queue, common_ignore):
