@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, make_response
+from htmapp.logger import get_logger, set_logger_params
 
 # configure
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('htmapp.default_settings')
 app.config.from_pyfile('application.cfg', silent=True)
 
+set_logger_params(app)
+
 # init db
 from htmapp.db.models.db_engine import get_db
 db = get_db()
 db.init(app.config['DB_NAME'], user=app.config['DB_USER'], password=app.config['DB_PASSWORD'])
 
-from htmapp.tags_processing.tags_grouper import TagsGrpouper
 
 @app.route('/')
 def hello_world():
     from htmapp.db.models.location import Location
     from htmapp.db.models.simple_area import SimpleArea
+    from htmapp.db.models.area_group import AreaGroup
+
     location = Location.get()
 
     lat_km = (location.north - location.south) / location.height * 1000
@@ -28,10 +32,8 @@ def hello_world():
     if max_count == None:
         max_count = 0
 
-    grouper = TagsGrpouper(location.id)
-    groups = grouper.process()
-
     max_count = 0
+    groups = location.area_groups
     for g in groups:
         if g.normal_count() > max_count:
             max_count = g.normal_count()

@@ -88,8 +88,8 @@ def update_tags(threads_count=100, memory=24 * 3600):
         cur_max_time = start_time
         while cur_max_time + small_delta <= now:
             for area in SimpleArea.select().where(SimpleArea.location == location):
-                tah = TagsOfAreaInHour.create(area=area, \
-                    max_stamp=cur_max_time+small_delta, \
+                tah = TagsOfAreaInHour.create(area=area,
+                    max_stamp=cur_max_time+small_delta,
                     min_stamp=cur_max_time)
                 areas_queue.put(tah)
 
@@ -111,5 +111,11 @@ def update_tags(threads_count=100, memory=24 * 3600):
         t.join()
 
     summarize_tags(threads_count)
+
+    print 'Tags summarized'
+
+    from htmapp.tags_processing.tags_grouper import TagsGrouper
+    grouper = TagsGrouper(location.id)
+    grouper.process()
 
     print 'Done'

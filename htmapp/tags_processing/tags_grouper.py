@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from htmapp.db.models.location import Location
 from htmapp.db.models.simple_area import SimpleArea
+from htmapp.db.models.area_group import AreaGroup
 
 
 class TagGroup(object):
@@ -45,11 +46,29 @@ class TagGroup(object):
         return int(float(self.count) / (self.right - self.left + 1) / (self.bottom - self.top + 1))
 
 
-class TagsGrpouper(object):
+class TagsGrouper(object):
     def __init__(self, location_id):
         self.location = Location.get(id=location_id)
 
+    def _clear_old_groups(self):
+        AreaGroup.delete().where(AreaGroup.location == self.location).execute()
+
+    def _save_groups(self, groups):
+        for g in groups:
+            group = AreaGroup.create(location=self.location,
+                tag=g.tag_name,
+                count=g.count,
+                areas_count=(g.right - g.left + 1) * (g.bottom - g.top + 1),
+                north=g.north,
+                south=g.south,
+                west=g.west,
+                east=g.east,
+                radius=g.radius)
+            group.save()
+
     def process(self):
+        self._clear_old_groups()
+
         queue = []
         groups = []
         for a in self.location.simple_areas.order_by(SimpleArea.row, SimpleArea.column):
@@ -81,5 +100,6 @@ class TagsGrpouper(object):
                     for a in to_the_bottom:
                         queue.remove(a)
             groups.append(group)
-        return groups
+
+        self._save_groups(groups)
 
