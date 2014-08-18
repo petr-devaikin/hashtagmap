@@ -92,22 +92,24 @@ window.onload = function() {
 
         var context = canvas.getContext("2d");
         context.fillStyle = getColor(opacity);
-        context.textAlign = 'left';
+        context.textAlign = 'center';
         context.textBaseline = 'top';
         context.font = font_size + 'px ' + FONT_FAMILY;
 
+        var leftMargin = 0;
         if (rotate) {
             context.rotate(-Math.PI/2);
+            leftMargin = -area_width;
+        }
+
+        for (var j = 0; j < lines.length; j++)
+            context.fillText(lines[j], area_width / 2.0 + leftMargin, font_size * j, shortest_word_width);
+        
+        if (rotate) {
             var tmp = area_width;
             area_width = area_height;
             area_height = tmp;
-            for (var j = 0; j < lines.length; j++)
-                context.fillText(lines[j], -area_height, font_size * j, shortest_word_width);
         }
-        else
-            for (var j = 0; j < lines.length; j++)
-                context.fillText(lines[j], 0, font_size * j, shortest_word_width);
-        
 
         areas[i].style.left = area_top_left_position[0] - area_padding[0] / 2 + AREA_MARGIN + "px";
         areas[i].style.top = area_top_left_position[1] - area_padding[1] / 2 + AREA_MARGIN + "px";
