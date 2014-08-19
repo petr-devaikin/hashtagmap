@@ -209,8 +209,8 @@ function width_of_word(word, font_size, context) {
 }
 
 function getColor(opacity) {
-    var r = Math.floor(125 * Math.sqrt(opacity) + 120);
-    var g = Math.floor(120 - 120 * Math.sqrt(opacity));
+    var r = Math.floor(95 * Math.sqrt(opacity) + 150);
+    var g = Math.floor(150 - 150 * Math.sqrt(opacity));
     var b = g;
     return 'rgb(' + r + ',' + g + ',' + b + ')';
     //var c = Math.floor(255 - 255 * opacity);
