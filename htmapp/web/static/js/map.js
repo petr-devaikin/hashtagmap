@@ -43,3 +43,24 @@ function set_full_map_size() {
     main.style.width = size[0] + "px";
     main.style.height = size[1] + "px";
 }
+
+
+function move_map_to_center() {
+    var main_container = document.getElementById("main_container");
+    marginTop = -(main_container.offsetHeight - window.innerHeight) / 2;
+    marginLeft = -(main_container.offsetWidth - window.innerWidth) / 2;
+    move_map();
+}
+
+function move_map(animation) {
+    $(main_container).stop();
+    if (animation)
+        $(main_container).animate({
+            top: marginTop,
+            left: marginLeft
+        }, "medium");
+    else {
+        main_container.style.top = marginTop + "px";
+        main_container.style.left = marginLeft + "px";
+    }
+}
