@@ -45,6 +45,9 @@
             &copy; 2014 Petr Devaikin<br/>
             E-mail: <a href="mailto:p.devaikin@gmail.com">p.devaikin@gmail.com</a>
 
+            <h2>Updated</h2>
+            {{ location.updated }}
+
             <h2>Ignored Hashtags</h2>
             {% for tag in ignore_list %}
                 {{ tag }}{% if not loop.last %},{% endif %}
