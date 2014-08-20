@@ -32,21 +32,30 @@
         </div>
         <div id="header">
             <span id="info_button">info</span>
-            <!--span id="last_update">Updated: {{ location.updated }}</span-->
             <div>
                 <h1><a href="{{ url_for('index') }}">Hashtag Map v. 1.0</a></h1>
             </div>
 
             <div id="cities">
-                <div class="city">Moscow</div>
+                {% for l in location_list %}
+                    {% if l.id == location.id %}
+                        <div class="city active">
+                            {{ l.name }}
+                        </div>
+                    {% else %}
+                        <div class="city">
+                            <a href="{{ url_for('index', location_name=l.name) }}">{{ l.name }}</a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
         <div id="info_block">
             &copy; 2014 Petr Devaikin<br/>
             E-mail: <a href="mailto:p.devaikin@gmail.com">p.devaikin@gmail.com</a>
 
-            <h2>Updated</h2>
-            {{ location.updated }}
+            <h2>Last Update</h2>
+            {{ location.updated }} ({{ location.timezone }})
 
             <h2>Ignored Hashtags</h2>
             {% for tag in ignore_list %}
@@ -59,6 +68,14 @@
             var lat_km = {{ lat_km }};
             var long_km = {{ long_km }};
             var map_key = "{{ map_key }}";
+
+            var location_name = "{{ location.name }}";
+
+            var MIN_LATITUDE = {{ location.south }};
+            var MAX_LATITUDE = {{ location.north }};
+
+            var MIN_LONGITUDE = {{ location.west }};
+            var MAX_LONGITUDE = {{ location.east }};
         </script>
         <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script src="{{ url_for('static', filename='js/map.js') }}"></script>

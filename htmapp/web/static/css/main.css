@@ -89,6 +89,10 @@ h1 a {
     padding: 8px 10px;
 }
 
+.city.active {
+    background: #F7F8F9;
+}
+
 #copyright {
     position: absolute;
     color: #bdbdbd;

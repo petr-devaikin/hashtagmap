@@ -1,24 +1,27 @@
 # -*- coding: utf-8 -*-
-from htmapp.db.models import *
+from htmapp.db.models.location import Location
+from htmapp.db.models.ignore_for_location import IgnoreForLocation
+from htmapp.db.models.simple_area import SimpleArea
 
 def create_msk_location():
-	msk = Location.create(name=u'Moscow', \
-		north=55.996804, south=55.492144, west=37.235253, east=37.945527, \
-		height=56132, north_width=44181, south_width=44756)
+	msk = Location.create(name=u'Moscow',
+		north=55.996804, south=55.492144, west=37.235253, east=37.945527,
+		height=56132, north_width=44181, south_width=44756,
+		timezone='Europe/Moscow')
 	print "+++ Moscow location created"
 
 
-	for tag in [u'moscow', u'москва', u'russia', u'россия', u'vscorussia', u'vscomoscow', \
+	for tag in [u'moscow', u'москва', u'russia', u'россия', u'vscorussia', u'vscomoscow', u'vscomsk',
 			u'msk', u'мск']:
 		IgnoreForLocation.create(location=msk, tag=tag)
 
 
 	radius = 500
 
-	lat_km = (msk.north - msk.south) / msk.height
-	long_km = (msk.east - msk.west) / (msk.north_width + msk.south_width) * 2
+    lat_km = msk.lat_km()
+    long_km = msk.long_km()
 
-	msk_coords = ((msk.north + msk.south) / 2, (msk.east + msk.west) / 2)
+    msk_coords = (msk.latitude(), msk.longitude())
 
 	y = msk.north - lat_km * radius
 	i = 0

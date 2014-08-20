@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, make_response, abort, redirect, url_for
 from htmapp.logger import get_logger, set_logger_params
-from peewee import DoesNotExist
 
 # configure
 app = Flask(__name__, instance_relative_config=True)
@@ -23,6 +22,7 @@ def index(location_name=None):
     from htmapp.db.models.simple_area import SimpleArea
     from htmapp.db.models.area_group import AreaGroup
     from htmapp.db.models.ignore_for_location import IgnoreForLocation
+    from peewee import DoesNotExist
 
     if location_name == None:
         location = Location.get()
@@ -47,14 +47,13 @@ def index(location_name=None):
         if g.normal_count() > max_count:
             max_count = g.normal_count()
 
-
     ignore_list = [] + app.config['COMMON_IGNORE']
     for tag in location.ignore_list:
         ignore_list.append(tag.tag)
     ignore_list = sorted(ignore_list)
 
     return render_template('index.html', max_count=max_count, lat_km=lat_km,
-        long_km=long_km, location=location, groups=groups, ignore_list=ignore_list,
+        long_km=long_km, location=location, location_list=Location.select(), groups=groups, ignore_list=ignore_list,
         map_key=app.config['GOOGLE_MAP_KEY'])
 
 """

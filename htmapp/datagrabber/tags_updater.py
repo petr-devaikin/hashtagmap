@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 import datetime
+import pytz
 
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
 from htmapp.db.models.hashtag_frequency_sum import HashtagFrequencySum
@@ -45,7 +46,7 @@ def clear_old_hours(location, min_time):
     TagsOfAreaInHour.delete().where(TagsOfAreaInHour.area << location.simple_areas, 
         TagsOfAreaInHour.max_stamp < min_time).execute()
 
-    print "Location {0}: {1} old hours to removed".format(location.name, count)
+    print "Location {0}: {1} old hours to remove".format(location.name, count)
 
 def update_location_time(location):
     all_hours = TagsOfAreaInHour.select().where(TagsOfAreaInHour.area << location.simple_areas).order_by(TagsOfAreaInHour.max_stamp.desc())
@@ -66,11 +67,12 @@ def update_tags(threads_count=100, memory=24 * 3600):
         threads.append(t)
         t.start()
 
-    now = datetime.datetime.now()
-    last_memory_time = now - datetime.timedelta(seconds=memory)
-    small_delta = datetime.timedelta(seconds=current_app.config['TAGS_TIME_PERIOD'])
 
     for location in Location.select():
+        now = datetime.datetime.now(tz=pytz.timezone(location.timezone)).replace(tzinfo=None)
+        last_memory_time = now - datetime.timedelta(seconds=memory)
+        small_delta = datetime.timedelta(seconds=current_app.config['TAGS_TIME_PERIOD'])
+
         clear_old_hours(location, last_memory_time)
         update_location_time(location)
 

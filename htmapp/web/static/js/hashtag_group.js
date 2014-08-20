@@ -1,10 +1,14 @@
 
 var AREA_MARGIN = 4;
 var ALLOW_ROTATION = true;
+
 var DRAWIND_FONT_SIZE = 24;
+var FONT_FAMILY = 'sans serif';
 
 var MIN_OPACITY = 0;
 var MAX_OPACITY = 1;
+
+
 
 function km_to_pixels(width, height) {
     return [long_km * width * PIXELS_PER_LONGITUDE,
@@ -36,7 +40,7 @@ function HashtagGroup(element) {
     this.width = this.padding[0] - 2 * AREA_MARGIN + bottom_right[0] - top_left[0];
     this.height = this.padding[1] - 2 * AREA_MARGIN + bottom_right[1] - top_left[1];
 
-    this.rotate = this.width < this.height && ALLOW_ROTATION;
+    this.rotate = (this.height - this.width) > 2 && ALLOW_ROTATION;
 
     element.style.left = top_left[0] - this.padding[0] / 2 + AREA_MARGIN + "px";
     element.style.top = top_left[1] - this.padding[1] / 2 + AREA_MARGIN + "px";

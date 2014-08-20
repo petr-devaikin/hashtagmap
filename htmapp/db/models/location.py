@@ -14,6 +14,7 @@ class Location(Model):
     height = IntegerField()
     north_width = IntegerField()
     south_width = IntegerField()
+    timezone = CharField()
     updated = DateTimeField(null=True)
 
     def latitude(self):
@@ -21,6 +22,12 @@ class Location(Model):
 
     def longitude(self):
         return (self.west + self.east) / 2
+
+    def lat_km(self):
+        return (self.north - self.south) / self.height
+
+    def long_km(self):
+        return (self.east - self.west) / (self.north_width + self.south_width) * 2
 
     class Meta:
         database = get_db()

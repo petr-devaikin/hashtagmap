@@ -1,3 +1,5 @@
+var MAP_ZOOM = 12;
+
 function get_map_url(latitude, longitude) {
     return "http://maps.googleapis.com/maps/api/staticmap?center=" +
         latitude + "," + longitude + "&zoom=" + MAP_ZOOM + "&scale=2" +

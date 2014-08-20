@@ -9,7 +9,7 @@ class TagsOfAreaInHour(Model):
     area = ForeignKeyField(SimpleArea, related_name='tags_in_hour')
     max_stamp = DateTimeField()
     min_stamp = DateTimeField()
-    processed = DateTimeField()
+    processed = DateTimeField(null=True)
 
     class Meta:
         database = get_db()
