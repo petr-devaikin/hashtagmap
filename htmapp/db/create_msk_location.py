@@ -2,13 +2,14 @@
 from htmapp.db.models.location import Location
 from htmapp.db.models.ignore_for_location import IgnoreForLocation
 from htmapp.db.models.simple_area import SimpleArea
+from htmapp.logger import get_logger
 
 def create_msk_location():
 	msk = Location.create(name=u'Moscow',
 		north=55.996804, south=55.492144, west=37.235253, east=37.945527,
 		height=56132, north_width=44181, south_width=44756,
 		timezone='Europe/Moscow')
-	print "+++ Moscow location created"
+	get_logger().info('Moscow location created')
 
 
 	for tag in [u'moscow', u'москва', u'russia', u'россия', u'vscorussia', u'vscomoscow', u'vscomsk',
@@ -34,6 +35,6 @@ def create_msk_location():
 			counter += 1
 			x += long_km * 2 * radius
 			j += 1
-		print "+++ Moscow areas created {0} for latitude {1}, row {2}".format(counter, y, i)
+		get_logger().info("Moscow areas created {0} for latitude {1}, row {2}".format(counter, y, i))
 		y -= lat_km * 2 * radius
 		i += 1

@@ -15,9 +15,11 @@ from flask import current_app
 import threading
 import Queue
 
+from htmapp.logger import get_logger
+
 
 def summarize_tags(threads_count=100):
-    print 'Summarizing start'
+    get_logger().info('Summarizing starts')
 
     areas_queue = Queue.Queue()
 
@@ -29,7 +31,7 @@ def summarize_tags(threads_count=100):
 
     threads = []
     for i in range(threads_count):
-        t = TagsSummarizingThread(areas_queue, current_app.config['COMMON_IGNORE'])
+        t = TagsSummarizingThread(areas_queue, current_app.config['COMMON_IGNORE'], get_logger())
         threads.append(t)
         t.start()
 
@@ -46,7 +48,7 @@ def clear_old_hours(location, min_time):
     TagsOfAreaInHour.delete().where(TagsOfAreaInHour.area << location.simple_areas, 
         TagsOfAreaInHour.max_stamp < min_time).execute()
 
-    print "Location {0}: {1} old hours to remove".format(location.name, count)
+    get_logger().info("Location {0}: {1} old hours to remove".format(location.name, count))
 
 def update_location_time(location):
     all_hours = TagsOfAreaInHour.select().where(TagsOfAreaInHour.area << location.simple_areas).order_by(TagsOfAreaInHour.max_stamp.desc())
@@ -58,12 +60,14 @@ def update_location_time(location):
 
 
 def update_tags(threads_count=100, memory=24 * 3600):
+    get_logger().info('Tags update starts')
+
     areas_queue = Queue.Queue()
     lock = threading.Lock()
 
     threads = []
     for i in range(threads_count):
-        t = TagsUpdaterThread(areas_queue, lock, current_app.config['LOGINS'])
+        t = TagsUpdaterThread(areas_queue, lock, current_app.config['LOGINS'], get_logger())
         threads.append(t)
         t.start()
 
@@ -86,7 +90,10 @@ def update_tags(threads_count=100, memory=24 * 3600):
                     TagsOfAreaInHour.area << location.simple_areas):
             areas_queue.put(tah)
 
+        get_logger().debug("Add new hour-areas to {0}".format(location.name))
+
         # add new areas
+        count = 0
         cur_max_time = start_time
         while cur_max_time + small_delta <= now:
             for area in SimpleArea.select().where(SimpleArea.location == location):
@@ -94,30 +101,33 @@ def update_tags(threads_count=100, memory=24 * 3600):
                     max_stamp=cur_max_time+small_delta,
                     min_stamp=cur_max_time)
                 areas_queue.put(tah)
+                count += 1
 
             cur_max_time = cur_max_time + small_delta
+
+        get_logger().debug("{0} hour-areas added to {1}".format(count, location.name))
 
         update_location_time(location)
 
     # hope that putting is faster than processing
     areas_queue.join()
 
-    print 'Queue joint'
+    get_logger().debug('Queue joint')
 
     for t in threads:
         t.stop()
 
-    print 'Threads stopping'
+    get_logger().debug('Threads stopping')
 
     for t in threads:
         t.join()
 
     summarize_tags(threads_count)
 
-    print 'Tags summarized'
+    get_logger().debug('Tags summarized')
 
     from htmapp.tags_processing.tags_grouper import TagsGrouper
     grouper = TagsGrouper(location.id)
     grouper.process()
 
-    print 'Done'
+    get_logger().info('Tags update is done')

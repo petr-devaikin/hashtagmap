@@ -10,13 +10,14 @@ import calendar
 import datetime
 
 class TagsUpdaterThread(threading.Thread):
-    def __init__(self, areas_queue, db_lock, logins):
+    def __init__(self, areas_queue, db_lock, logins, logger):
         super(TagsUpdaterThread, self).__init__()
         self.queue = areas_queue
         self.db_lock = db_lock
         self.logins = logins
         self.grabber = self._get_grabber()
         self._stop = threading.Event()
+        self.logger = logger
     
     _pass_everything = False
     _current_client = 0
@@ -32,17 +33,16 @@ class TagsUpdaterThread(threading.Thread):
             try:
                 area = self.queue.get(timeout=1)
                 if not self._pass_everything:
-                    print "Areas left: {0}".format(self.queue.qsize())
+                    self.logger.debug("Areas left: {0}".format(self.queue.qsize()))
 
                 try:
                     if not self._pass_everything:
                         self.update_tags_for_area(area)
                 except Exception as ex:
-                    print ex
-                    print "Area {0} is not processed".format(area.id)
+                    self.logger.exception("Area {0} is not processed".format(area.id))
                     if not self._change_client():
                         self._pass_everything = True
-                        print "Instagram banned me :("
+                        self.logger.warning("Instagram banned me :(")
                 finally:
                     self.queue.task_done()
 
@@ -78,4 +78,4 @@ class TagsUpdaterThread(threading.Thread):
         area_hour.processed = datetime.datetime.now()
         area_hour.save()
 
-        print "+++ {2} tags for area {0} of {1} updated".format(area.id, area.location.name, area_hour.hashtag_counts.count())
+        self.logger.debug("+++ {2} tags for area {0} of {1} updated".format(area.id, area.location.name, area_hour.hashtag_counts.count()))

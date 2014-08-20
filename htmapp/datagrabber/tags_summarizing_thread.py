@@ -6,16 +6,17 @@ from htmapp.db.models.hashtag import Hashtag
 from htmapp.db.models.ignore_for_location import IgnoreForLocation
 
 class TagsSummarizingThread(threading.Thread):
-    def __init__(self, areas_queue, common_ignore):
+    def __init__(self, areas_queue, common_ignore, logger):
         super(TagsSummarizingThread, self).__init__()
         self.queue = areas_queue
         self.common_ignore = common_ignore
+        self.logger = logger
 
     def run(self):
         while True:
             try:
                 area = self.queue.get(False)
-                print "Areas left: {0}".format(self.queue.qsize())
+                self.logger.debug("Areas left: {0}".format(self.queue.qsize()))
                 self.recalc_tags_for_area(area)
                 self.queue.task_done()
             except Queue.Empty:
@@ -47,4 +48,4 @@ class TagsSummarizingThread(threading.Thread):
             ignore.append(tag.tag)
         TagsSummarizingThread.calc_most_popular_tag_for_area(area, ignore)
 
-        print "Area {0} of {1} recalculated".format(area.id, area.location.name)
+        self.logger.debug("Area {0} of {1} recalculated".format(area.id, area.location.name))

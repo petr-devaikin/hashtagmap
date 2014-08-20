@@ -2,14 +2,14 @@
 from htmapp.db.models.location import Location
 from htmapp.db.models.ignore_for_location import IgnoreForLocation
 from htmapp.db.models.simple_area import SimpleArea
+from htmapp.logger import get_logger
 
 def create_london_location():
     london = Location.create(name=u'London',
         north=51.709035, south=51.249583, west=-0.552444, east=0.305863,
         height=51108, north_width=59328, south_width=59927,
         timezone='Europe/London')
-    print "+++ London location created"
-
+    get_logger().info('London location created')
 
     for tag in [u'london']:
         IgnoreForLocation.create(location=london, tag=tag)
@@ -33,6 +33,6 @@ def create_london_location():
             counter += 1
             x += long_km * 2 * radius
             j += 1
-        print "+++ London areas created {0} for latitude {1}, row {2}".format(counter, y, i)
+        get_logger().debug("London areas created {0} for latitude {1}, row {2}".format(counter, y, i))
         y -= lat_km * 2 * radius
         i += 1
