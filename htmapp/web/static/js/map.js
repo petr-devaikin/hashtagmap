@@ -22,7 +22,7 @@ function get_map_url(latitude, longitude) {
         //"&style=feature:road.local%7Cvisibility:off" +
 
         "&style=feature:transit%7Cvisibility:off" +
-        "&style=feature:water%7Clightness:0" +
+        "&style=feature:water%7Clightness:50" +
         //"&style=element:geometry.fill&7feature:road%7Cvisibility:off" +
         "&key=" + map_key;
 }

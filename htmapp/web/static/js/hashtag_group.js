@@ -1,5 +1,5 @@
 
-var AREA_MARGIN = 0;
+var AREA_MARGIN = 5;
 var ALLOW_ROTATION = true;
 
 var DRAWIND_FONT_SIZE = 24;
@@ -181,10 +181,21 @@ function width_of_word(word, font_size, context) {
     return context.measureText(word).width;
 }
 
+var MIN_RED = 230;
+var MAX_RED = 255;
+var MIN_GREEN = 230;
+var MAX_GREEN = 49;
+var MIN_BLUE = 230;
+var MAX_BLUE = 0;
+
+function get_saturation(o) {
+    return Math.pow(o, 0.5);
+}
+
 function getColor(opacity) {
-    var r = Math.floor(95 * Math.sqrt(opacity) + 150);
-    var g = Math.floor(150 - 150 * Math.sqrt(opacity));
-    var b = g;
+    var r = Math.floor(MIN_RED + (MAX_RED - MIN_RED) * get_saturation(opacity));
+    var g = Math.floor(MIN_GREEN + (MAX_GREEN - MIN_GREEN) * get_saturation(opacity));
+    var b = Math.floor(MIN_BLUE + (MAX_BLUE - MIN_BLUE) * get_saturation(opacity));
     return 'rgb(' + r + ',' + g + ',' + b + ')';
     //var c = Math.floor(255 - 255 * opacity);
     //return 'rgb(' + c + ',' + c + ',' + c + ')';
