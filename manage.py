@@ -9,6 +9,12 @@ def hello():
     """
     Print hello
     """
+    from htmapp.logger import get_logger
+    get_logger().debug("Hello debug")
+    get_logger().info("Hello info")
+    get_logger().warning("Hello warning")
+    get_logger().error("Hello error")
+    get_logger().critical("Hello critical")
     print "hello"
 
 @manager.command

@@ -20,5 +20,6 @@ LOGINS = [{ 'CLIENT_ID': '', 'CLIENT_SECRET': '' }]
 
 TAGS_TIME_PERIOD = 3600
 
-LOG_FILE = '/tmp/userapi.log'
-LOG_FORMAT = '%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s'
+LOG_FILE = '/tmp/hashtagmap.log'
+LOG_FILE_DEBUG = '/tmp/hashtagmap-debug.log'
+LOG_FORMAT = '[%(asctime)s] %(filename)s[%(lineno)d] #%(levelname)-8s  %(message)s'
