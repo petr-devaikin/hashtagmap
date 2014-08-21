@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-from htmapp.db.models import *
+from htmapp.db.models.hashtag_frequency import HashtagFrequency
+from htmapp.db.models.hashtag_frequency_sum import HashtagFrequencySum
+from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
+from htmapp.db.models.simple_area import SimpleArea
+from htmapp.db.models.ignore_for_location import IgnoreForLocation
+from htmapp.db.models.location import Location
+from htmapp.db.models.hashtag import Hashtag
+from htmapp.db.models.area_group import AreaGroup
 from htmapp.logger import get_logger
 
 def drop_tables():
@@ -23,9 +30,13 @@ def drop_tables():
         IgnoreForLocation.drop_table()
     get_logger().info('IgnoreForLocation table dropped')
 
+    if AreaGroup.table_exists():
+        AreaGroup.drop_table()
+    get_logger().info('AreaGroup table dropped')
+
     if Location.table_exists():
-    	Location.drop_table()
-	get_logger().info('Location table dropped')
+        Location.drop_table()
+    get_logger().info('Location table dropped')
 
     if Hashtag.table_exists():
         Hashtag.drop_table()
@@ -35,6 +46,9 @@ def drop_tables():
 def create_tables():
     Location.create_table()
     get_logger().info('Location table created')
+
+    AreaGroup.create_table()
+    get_logger().info('AreaGroup table created')
 
     IgnoreForLocation.create_table()
     get_logger().info('IgnoreForLocation table created')

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from htmapp.db.models.hashtag import Hashtag
 from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
-from htmapp.db.models.db_engine import get_db
+from htmapp.db.db_engine import get_db
 from peewee import *
 
 db = MySQLDatabase(None, threadlocals=True)

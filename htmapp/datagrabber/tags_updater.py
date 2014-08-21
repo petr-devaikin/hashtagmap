@@ -90,7 +90,7 @@ def update_tags(threads_count=100, memory=24 * 3600):
                     TagsOfAreaInHour.area << location.simple_areas):
             areas_queue.put(tah)
 
-        get_logger().debug("Add new hour-areas to {0}".format(location.name))
+        get_logger().info("Add new hour-areas to {0}".format(location.name))
 
         # add new areas
         count = 0
@@ -105,14 +105,14 @@ def update_tags(threads_count=100, memory=24 * 3600):
 
             cur_max_time = cur_max_time + small_delta
 
-        get_logger().debug("{0} hour-areas added to {1}".format(count, location.name))
+        get_logger().info("{0} hour-areas added to {1}".format(count, location.name))
 
         update_location_time(location)
 
     # hope that putting is faster than processing
     areas_queue.join()
 
-    get_logger().debug('Queue joint')
+    get_logger().debug('Areas updated')
 
     for t in threads:
         t.stop()
@@ -124,7 +124,7 @@ def update_tags(threads_count=100, memory=24 * 3600):
 
     summarize_tags(threads_count)
 
-    get_logger().debug('Tags summarized')
+    get_logger().info('Tags summarized')
 
     from htmapp.tags_processing.tags_grouper import TagsGrouper
     grouper = TagsGrouper(location.id)

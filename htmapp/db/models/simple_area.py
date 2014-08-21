@@ -2,7 +2,7 @@
 from htmapp.db.models.location import Location
 from htmapp.db.models.hashtag import Hashtag
 from peewee import *
-from htmapp.db.models.db_engine import get_db
+from htmapp.db.db_engine import get_db
 
 db = MySQLDatabase(None, threadlocals=True)
 

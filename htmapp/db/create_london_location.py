@@ -3,12 +3,19 @@ from htmapp.db.models.location import Location
 from htmapp.db.models.ignore_for_location import IgnoreForLocation
 from htmapp.db.models.simple_area import SimpleArea
 from htmapp.logger import get_logger
+from flask import current_app
 
 def create_london_location():
-    london = Location.create(name=u'London',
-        north=51.709035, south=51.249583, west=-0.552444, east=0.305863,
-        height=51108, north_width=59328, south_width=59927,
-        timezone='Europe/London')
+    if current_app.config['TESTING']:
+        london = Location.create(name=u'London',
+            north=51.509035, south=51.449583, west=-0.152444, east=0.005863,
+            height=51108, north_width=59328, south_width=59927,
+            timezone='Europe/London')
+    else:
+        london = Location.create(name=u'London',
+            north=51.709035, south=51.249583, west=-0.552444, east=0.305863,
+            height=51108, north_width=59328, south_width=59927,
+            timezone='Europe/London')
     get_logger().info('London location created')
 
     for tag in [u'london']:

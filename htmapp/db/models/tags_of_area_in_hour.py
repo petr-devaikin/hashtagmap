@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from htmapp.db.models.simple_area import SimpleArea
 from peewee import *
-from htmapp.db.models.db_engine import get_db
+from htmapp.db.db_engine import get_db
 
 db = MySQLDatabase(None, threadlocals=True)
 

@@ -10,10 +10,8 @@ app.config.from_pyfile('application.cfg', silent=True)
 set_logger_params(app)
 
 # init db
-from htmapp.db.models.db_engine import get_db
-db = get_db()
-db.init(app.config['DB_NAME'], user=app.config['DB_USER'], password=app.config['DB_PASSWORD'])
-
+from htmapp.db.db_engine import init_db
+init_db(app)
 
 @app.route('/')
 @app.route('/<location_name>')

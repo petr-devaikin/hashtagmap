@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from peewee import *
-from htmapp.db.models.db_engine import get_db
+from htmapp.db.db_engine import get_db
 
 
 db = MySQLDatabase(None, threadlocals=True)
