@@ -9,7 +9,7 @@ DB_PASSWORD = 'password'
 COMMON_IGNORE = [u'instasize', u'love',
     u'vsco', u'vscocam', u'vscophoto', u'vscogood', u'vscobest', u'vscodaily', u'vscolike',
     u'vscoonly', u'vscophoto', u'vscom', u'vscocamera', u'vscoawar', u'vscostyle', u'vscovibe', u'vscophil',
-    u'vscosummer', u'instavsco', u'vscogrid', u'vsco_food', u'vscolove',
+    u'vscosummer', u'instavsco', u'vscogrid', u'vsco_food', u'vscolove', u'vscolover',
     u'follow', u'followme', u'followmeback', u'followhim', u'followher',
     u'instamood', u'instagood', u'instagram', u'instatags4likes', u'likeforlike', u'like4like', u'instacollage',
     u'tagsforlikes']

@@ -4,7 +4,27 @@ function get_map_url(latitude, longitude) {
     return "http://maps.googleapis.com/maps/api/staticmap?center=" +
         latitude + "," + longitude + "&zoom=" + MAP_ZOOM + "&scale=2" +
         "&size=" + MAP_WIDTH + "x" + MAP_HEIGHT + "&maptype=roadmap" +
-        "&style=element:labels%7Cvisibility:off&style=saturation:-20&style=lightness:-10&key=" + map_key;
+        "&style=element:labels%7Cvisibility:off" +
+        "&style=element:geometry.stroke%7Cvisibility:off" +
+
+        "&style=feature:landscape%7Cvisibility:off" +
+
+        "&style=feature:poi%7Cvisibility:off" +
+        "&style=feature:poi.park%7Cvisibility:on" +
+        "&style=feature:poi.park%7Clightness:90" +
+        "&style=feature:poi.park%7Csaturation:-100" +
+
+
+        "&style=feature:road%7Csaturation:-100" +
+        "&style=feature:road.local%7Clightness:30" +
+        "&style=feature:road.arterial%7Clightness:30" +
+        "&style=feature:road.highway%7Clightness:30" +
+        //"&style=feature:road.local%7Cvisibility:off" +
+
+        "&style=feature:transit%7Cvisibility:off" +
+        "&style=feature:water%7Clightness:0" +
+        //"&style=element:geometry.fill&7feature:road%7Cvisibility:off" +
+        "&key=" + map_key;
 }
 
 function create_img(latitude, longitude) {

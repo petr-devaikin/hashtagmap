@@ -39,10 +39,10 @@ class TagsUpdaterThread(threading.Thread):
                     if not self._pass_everything:
                         self.update_tags_for_area(area)
                 except Exception as ex:
-                    self.logger.exception("Area {0} is not processed".format(area.id))
+                    self.logger.debug("Area {0} is not processed: {1}".format(area.id, ex))
                     if not self._change_client():
                         self._pass_everything = True
-                        self.logger.warning("Instagram banned me :(")
+                        self.logger.debug("Instagram banned me :(")
                 finally:
                     self.queue.task_done()
 

@@ -1,5 +1,5 @@
 
-var AREA_MARGIN = 4;
+var AREA_MARGIN = 0;
 var ALLOW_ROTATION = true;
 
 var DRAWIND_FONT_SIZE = 24;
