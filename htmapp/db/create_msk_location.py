@@ -8,8 +8,8 @@ from flask import current_app
 def create_msk_location():
     if current_app.config['TESTING']:
         msk = Location.create(name=u'Moscow',
-            north=55.796804, south=55.692144, west=37.535253, east=37.645527,
-            height=56132, north_width=44181, south_width=44756,
+            north=55.996804, south=55.492144, west=37.235253, east=37.945527,
+            height=3000, north_width=3000, south_width=3000,
             timezone='Europe/Moscow')
     else:
         msk = Location.create(name=u'Moscow',

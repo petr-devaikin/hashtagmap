@@ -12,10 +12,10 @@ class FlaskrTestCase(unittest.TestCase):
         app.config['TESTING'] = True
         app.config['LOG_FILE'] = app.config['LOG_FILE_DEBUG'] = app.config['LOG_FILE_TEST']
         set_logger_params(app)
-        #with app.test_request_context():
+        with app.test_request_context():
         #self.client = app.test_client()
-        #    init_db(app)
-        #    init_database()
+            init_db(app)
+            init_database()
 
     def tearDown(self):
         os.close(self.db_fd)

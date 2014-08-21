@@ -8,8 +8,8 @@ from flask import current_app
 def create_london_location():
     if current_app.config['TESTING']:
         london = Location.create(name=u'London',
-            north=51.509035, south=51.449583, west=-0.152444, east=0.005863,
-            height=51108, north_width=59328, south_width=59927,
+            north=51.709035, south=51.249583, west=-0.552444, east=0.305863,
+            height=2000, north_width=4000, south_width=4500,
             timezone='Europe/London')
     else:
         london = Location.create(name=u'London',
