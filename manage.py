@@ -33,7 +33,7 @@ def update_tags():
     Update tags in database
     """
     from htmapp.datagrabber.tags_updater import update_tags
-    update_tags(threads_count=app.config['UPDATE_THREADS_COUNT'], memory=24 * 3600)
+    update_tags(threads_count=app.config['UPDATE_THREADS_COUNT'], memory=app.config['TAGS_MEMORY'])
 
 if __name__ == "__main__":
     manager.run()

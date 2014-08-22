@@ -9,8 +9,6 @@ from htmapp.db.models.location import Location
 from htmapp.db.models.simple_area import SimpleArea
 from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
 
-from tags_updater_thread import TagsUpdaterThread
-from tags_summarizing_thread import TagsSummarizingThread
 from flask import current_app
 import threading
 import Queue
@@ -19,6 +17,8 @@ from htmapp.logger import get_logger
 
 
 def summarize_tags(threads_count=100):
+    from tags_summarizing_thread import TagsSummarizingThread
+
     get_logger().info('Summarizing starts')
 
     areas_queue = Queue.Queue()
@@ -59,7 +59,9 @@ def update_location_time(location):
     location.save()
 
 
-def update_tags(threads_count=100, memory=24 * 3600):
+def update_tags(threads_count, memory):
+    from tags_updater_thread import TagsUpdaterThread
+
     get_logger().info('Tags update starts')
 
     areas_queue = Queue.Queue()
