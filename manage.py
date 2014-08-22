@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask.ext.script import Manager
-from htmapp.web.app import app
+from htmapp.web.application_factory import create_app, init_app
 
+app = create_app()
+init_app(app)
 manager = Manager(app)
 
 @manager.command

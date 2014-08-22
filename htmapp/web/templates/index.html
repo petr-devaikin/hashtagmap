@@ -33,7 +33,7 @@
         <div id="header">
             <span id="info_button">info</span>
             <div>
-                <h1><a href="{{ url_for('index') }}">Hashtag Map</a></h1>
+                <h1><a href="{{ url_for('htm_app.index') }}">Hashtag Map</a></h1>
             </div>
 
             <div id="cities">
@@ -44,7 +44,7 @@
                         </div>
                     {% else %}
                         <div class="city">
-                            <a href="{{ url_for('index', location_name=l.name) }}">{{ l.name }}</a>
+                            <a href="{{ url_for('htm_app.index', location_name=l.name) }}">{{ l.name }}</a>
                         </div>
                     {% endif %}
                 {% endfor %}

@@ -5,7 +5,7 @@ _db = Proxy()
 
 def init_db(app):
     if app.config['TESTING']:
-        database = SqliteDatabase(app.config['TEST_DATABASE'])
+        database = SqliteDatabase(app.config['TEST_DATABASE'], threadlocals=True)
     else:
         database = MySQLDatabase(app.config['DB_NAME'],
             user=app.config['DB_USER'], password=app.config['DB_PASSWORD'],
