@@ -127,7 +127,10 @@ def update_tags(threads_count=100, memory=24 * 3600):
     get_logger().info('Tags summarized')
 
     from htmapp.tags_processing.tags_grouper import TagsGrouper
-    grouper = TagsGrouper(location.id)
-    grouper.process()
+
+    for location in Location.select():
+        grouper = TagsGrouper(location.id)
+        grouper.process()
+        get_logger().info("Tags groupped for {0}".format(location.name))
 
     get_logger().info('Tags update is done')

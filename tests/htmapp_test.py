@@ -22,11 +22,17 @@ class FlaskrTestCase(unittest.TestCase):
         os.remove(app.config['TEST_DATABASE'])
         os.remove(app.config['LOG_FILE_TEST'])
 
-    def test_location_count(self):
+    def test_location_urls(self):
         from htmapp.db.models.location import Location
-        #rv = self.client.get('/')
-        with app.test_request_context():
-            print Location.select().count()
+        for location in Location.select():
+            rv = app.test_client().get('/' + location.name)
+            assert rv.status_code == 200
+
+    def test_root_redirect(self):
+        from htmapp.db.models.location import Location
+        rv = app.test_client().get('/')
+        assert rv.status_code == 302
+        assert rv.headers['Location'].split('/')[-1] == Location.get().name
 
 if __name__ == '__main__':
     unittest.main()

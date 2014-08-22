@@ -18,6 +18,7 @@ GOOGLE_MAP_KEY = ''
 
 LOGINS = [{ 'CLIENT_ID': '', 'CLIENT_SECRET': '' }]
 
+UPDATE_THREADS_COUNT = 50
 TAGS_TIME_PERIOD = 3600
 
 LOG_FILE = '/tmp/hashtagmap.log'

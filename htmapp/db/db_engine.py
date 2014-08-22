@@ -8,7 +8,8 @@ def init_db(app):
         database = SqliteDatabase(app.config['TEST_DATABASE'])
     else:
         database = MySQLDatabase(app.config['DB_NAME'],
-            user=app.config['DB_USER'], password=app.config['DB_PASSWORD'])
+            user=app.config['DB_USER'], password=app.config['DB_PASSWORD'],
+            threadlocals=True)
     _db.initialize(database)
 
 def get_db():
