@@ -47,7 +47,9 @@ class InstaGrabber:
             if len(media) == 0:
                 break
 
-            self.all_media = self.all_media + media
+            for m in media:
+                if not m inself.all_media:
+                    self.all_media.append(m)
 
             if max_stamp <= datetime_to_timestamp(media[-1].created_time):
                 max_stamp = max_stamp - 3600

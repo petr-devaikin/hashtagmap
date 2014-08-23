@@ -13,3 +13,7 @@ class TagsOfAreaInHour(Model):
 
     class Meta:
         database = get_db()
+        indexes = (
+            (('area', 'max_stamp'), True),
+            (('area', 'min_stamp'), True)
+        )

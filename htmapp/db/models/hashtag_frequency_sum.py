@@ -13,3 +13,6 @@ class HashtagFrequencySum(Model):
 
     class Meta:
         database = get_db()
+        indexes = (
+            (('hashtag', 'area'), True),
+        )
