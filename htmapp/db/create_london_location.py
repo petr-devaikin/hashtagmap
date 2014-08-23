@@ -18,7 +18,7 @@ def create_london_location():
             timezone='Europe/London')
     get_logger().info('London location created')
 
-    for tag in [u'london']:
+    for tag in [u'london', u'uk']:
         IgnoreForLocation.create(location=london, tag=tag)
 
 

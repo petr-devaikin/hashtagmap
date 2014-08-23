@@ -114,7 +114,7 @@ def update_tags(threads_count, memory):
     # hope that putting is faster than processing
     areas_queue.join()
 
-    get_logger().debug('Areas updated')
+    get_logger().info('Areas updated')
 
     for t in threads:
         t.stop()
