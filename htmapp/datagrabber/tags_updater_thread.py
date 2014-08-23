@@ -6,6 +6,7 @@ from instagram.bind import InstagramAPIError
 
 from htmapp.db.models.hashtag import Hashtag
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
+from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
 
 import calendar
 import datetime
@@ -67,21 +68,33 @@ class TagsUpdaterThread(threading.Thread):
             self.grabber = self._get_grabber()
             return True
 
-    def update_tags_for_area(self, area_hour):
-        area = area_hour.area
-        max_stamp = calendar.timegm(area_hour.max_stamp.timetuple())
-        min_stamp = calendar.timegm(area_hour.min_stamp.timetuple())
+    def update_tags_for_area(self, area):
+        area_hours = TagsOfAreaInHour.select().where(TagsOfAreaInHour.processed == None,
+                    TagsOfAreaInHour.area == area)
 
-        tags = self.grabber.find_tags((area.latitude, area.longitude), area.radius, \
-            max_stamp, min_stamp)
+        area_max_stamp = calendar.timegm(area_hours.order_by(TagsOfAreaInHour.max_stamp.desc())[0].max_stamp.timetuple())
+        area_min_stamp = calendar.timegm(area_hours.order_by(TagsOfAreaInHour.max_stamp)[0].min_stamp.timetuple())
 
-        for tag_name in tags:
-            self.db_lock.acquire()
-            hashtag = Hashtag.get_or_create(name=tag_name)
-            self.db_lock.release()
-            HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
+        #print "Area min max", area_min_stamp, area_max_stamp
 
-        area_hour.processed = datetime.datetime.now()
-        area_hour.save()
+        self.grabber.find_tags((area.latitude, area.longitude), area.radius,
+            area_max_stamp, area_min_stamp)
+
+        for area_hour in area_hours:
+            #print "Updating {0}".format(area_hour.id)
+            max_stamp = calendar.timegm(area_hour.max_stamp.timetuple())
+            min_stamp = calendar.timegm(area_hour.min_stamp.timetuple())
+            tags = self.grabber.calc_tags(max_stamp, min_stamp)
+
+            #print "{0} tags found".format(len(tags))
+
+            for tag_name in tags:
+                self.db_lock.acquire()
+                hashtag = Hashtag.get_or_create(name=tag_name)
+                self.db_lock.release()
+                HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
+
+            area_hour.processed = datetime.datetime.now()
+            area_hour.save()
 
         self.logger.debug("+++ {2} tags for area {0} of {1} updated".format(area.id, area.location.name, area_hour.hashtag_counts.count()))

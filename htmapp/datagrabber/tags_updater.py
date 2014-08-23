@@ -61,7 +61,7 @@ def update_location_time(location):
     location.save()
 
 
-def update_tags(threads_count, memory):
+def update_tags(request_threads_count, summarize_threads_count, memory):
     from tags_updater_thread import TagsUpdaterThread
 
     get_logger().info('Tags update starts')
@@ -70,7 +70,7 @@ def update_tags(threads_count, memory):
     lock = threading.Lock()
 
     threads = []
-    for i in range(1):
+    for i in range(request_threads_count):
         t = TagsUpdaterThread(areas_queue, lock, current_app.config['LOGINS'], get_logger())
         threads.append(t)
         t.start()
@@ -89,11 +89,6 @@ def update_tags(threads_count, memory):
         else:
             start_time = location.updated
 
-        # process not processed areas
-        for tah in TagsOfAreaInHour.select().where(TagsOfAreaInHour.processed == None, \
-                    TagsOfAreaInHour.area << location.simple_areas):
-            areas_queue.put(tah)
-
         get_logger().info("Add new hour-areas to {0}".format(location.name))
 
         # add new areas
@@ -104,7 +99,6 @@ def update_tags(threads_count, memory):
                 tah = TagsOfAreaInHour.create(area=area,
                     max_stamp=cur_max_time+small_delta,
                     min_stamp=cur_max_time)
-                areas_queue.put(tah)
                 count += 1
 
             cur_max_time = cur_max_time + small_delta
@@ -112,6 +106,12 @@ def update_tags(threads_count, memory):
         get_logger().info("{0} hour-areas added to {1}".format(count, location.name))
 
         update_location_time(location)
+
+        # process not processed areas
+        for area in location.simple_areas:
+            if TagsOfAreaInHour.select().where(TagsOfAreaInHour.processed == None,
+                    TagsOfAreaInHour.area == area).count() > 0:
+                areas_queue.put(area)
 
     get_logger().info('Waiting for all threads')
 
@@ -128,7 +128,7 @@ def update_tags(threads_count, memory):
     for t in threads:
         t.join()
 
-    summarize_tags(threads_count)
+    summarize_tags(summarize_threads_count)
 
     get_logger().info('Tags summarized')
 
