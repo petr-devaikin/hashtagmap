@@ -2,8 +2,12 @@
 import threading
 import Queue
 from htmapp.db.models.hashtag_frequency_sum import HashtagFrequencySum
+from htmapp.db.models.hashtag_frequency import HashtagFrequency
 from htmapp.db.models.hashtag import Hashtag
+from htmapp.db.models.simple_area import SimpleArea
+from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
 from htmapp.db.models.ignore_for_location import IgnoreForLocation
+from peewee import fn
 
 class TagsSummarizingThread(threading.Thread):
     def __init__(self, areas_queue, common_ignore, logger):
@@ -37,11 +41,15 @@ class TagsSummarizingThread(threading.Thread):
 
 
     def recalc_tags_for_area(self, area):
-        for hour in area.tags_in_hour:
-            for tag_count in hour.hashtag_counts:
-                sum_count = HashtagFrequencySum.get_or_create(hashtag=tag_count.hashtag, area=area)
-                sum_count.count += tag_count.count
-                sum_count.save()
+        select = HashtagFrequency.select(HashtagFrequency.area_in_hour, HashtagFrequency.hashtag, fn.Sum(HashtagFrequency.count).alias('sum'))
+        join = select.join(TagsOfAreaInHour).join(SimpleArea)
+        where = join.where(TagsOfAreaInHour.area == area)
+        group = where.group_by(HashtagFrequency.hashtag, TagsOfAreaInHour.area)
+
+        for h in group:
+            sum_count = HashtagFrequencySum(hashtag=h.hashtag, area=h.area_in_hour.area)
+            sum_count.count = h.sum
+            sum_count.save()
 
         ignore = [] + self.common_ignore
         for tag in area.location.ignore_list:

@@ -2,7 +2,6 @@
 import threading
 import Queue
 from insta_grabber import *
-from instagram.bind import InstagramAPIError
 
 from htmapp.db.models.hashtag import Hashtag
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
@@ -38,17 +37,17 @@ class TagsUpdaterThread(threading.Thread):
                     if not self._pass_everything:
                         self.logger.debug("Areas left: {0}".format(self.queue.qsize()))
 
-                    try:
-                        if not self._pass_everything:
-                            self.update_tags_for_area(area)
-                    except InstagramAPIError as ex:
-                        self.logger.debug("Instagram API error. Area {0} is not processed: {1}".format(area.id, ex))
-                        if not self._change_client():
-                            self._pass_everything = True
-                    except Exception as ex:
-                        self.logger.error("Area {0} is not processed: {1}".format(area.id, ex))
-                    finally:
-                        self.queue.task_done()
+                        try:
+                                self.update_tags_for_area(area)
+                        except InstaGrabberBanException as ex:
+                            self.logger.debug("Instagram banned me. Area {0} is not processed: {1}".format(area.id, ex))
+                            if not self._change_client():
+                                self.logger.debug("Last instagram client expired")
+                                self._pass_everything = True
+                        except Exception as ex:
+                            self.logger.exception("Area {0} is not processed: {1}".format(area.id, ex))
+                    
+                    self.queue.task_done()
 
                 except Queue.Empty:
                     continue

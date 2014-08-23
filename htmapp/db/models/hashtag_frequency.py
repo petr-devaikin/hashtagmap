@@ -14,3 +14,6 @@ class HashtagFrequency(Model):
 
     class Meta:
         database = get_db()
+        indexes = (
+            (('hashtag', 'area_in_hour'), True),
+        )

@@ -2,6 +2,18 @@
 from instagram.client import InstagramAPI
 from instagram.helper import datetime_to_timestamp
 import operator
+from instagram.bind import InstagramAPIError, InstagramClientError
+
+class InstaGrabberBanException(Exception):
+    def __init__(self, error_message, status_code=None):
+        self.status_code = status_code
+        self.error_message = error_message
+
+    def __str__(self):
+        if self.status_code:
+            return "(%s) %s" % (self.status_code, self.error_message)
+        else:
+            return self.error_message
 
 class InstaGrabber:
     MAX_SEARCH_COUNT = 100
@@ -13,10 +25,23 @@ class InstaGrabber:
     def find_tags(self, coords, distance, max_date, min_date):
         self.all_media = []
         max_stamp = max_date
+        attempts = 3
         while max_stamp > min_date:
             #print "Request for {0} {1} - {2} send".format(coords, min_date, max_date)
-            media = self.__api.media_search(lat=coords[0], lng=coords[1], distance=distance, \
-                max_timestamp=max_stamp, count=self.MAX_SEARCH_COUNT)
+            try:
+                media = self.__api.media_search(lat=coords[0], lng=coords[1], distance=distance, \
+                    max_timestamp=max_stamp, count=self.MAX_SEARCH_COUNT)
+            except InstagramAPIError as ex:
+                if ex.error_type == "Rate limited":
+                    raise InstaGrabberBanException(ex.error_message, ex.status_code)
+                else:
+                    raise ex
+            except InstagramClientError as ex:
+                if attempts > 0:
+                    attempts = attempts - 1
+                    continue
+                else:
+                    raise ex
             #print "Answer for {0} {1} - {2} received".format(coords, min_date, max_date)
 
             if len(media) == 0:
