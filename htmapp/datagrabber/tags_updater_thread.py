@@ -30,24 +30,30 @@ class TagsUpdaterThread(threading.Thread):
         return self._stop.isSet()
 
     def run(self):
-        while not self.stopped():
-            try:
-                area = self.queue.get(timeout=1)
-                if not self._pass_everything:
-                    self.logger.debug("Areas left: {0}".format(self.queue.qsize()))
-
+        try:
+            while not self.stopped():
                 try:
+                    area = self.queue.get(timeout=1)
                     if not self._pass_everything:
-                        self.update_tags_for_area(area)
-                except InstagramAPIError as ex:
-                    self.logger.debug("Instagram API error. Area {0} is not processed: {1}".format(area.id, ex))
-                except Exception as ex:
-                    self.logger.error("Area {0} is not processed: {1}".format(area.id, ex))
-                finally:
-                    self.queue.task_done()
+                        self.logger.debug("Areas left: {0}".format(self.queue.qsize()))
 
-            except Queue.Empty:
-                continue
+                    try:
+                        if not self._pass_everything:
+                            self.update_tags_for_area(area)
+                    except InstagramAPIError as ex:
+                        self.logger.debug("Instagram API error. Area {0} is not processed: {1}".format(area.id, ex))
+                        if not self._change_client():
+                            self._pass_everything = True
+                    except Exception as ex:
+                        self.logger.error("Area {0} is not processed: {1}".format(area.id, ex))
+                    finally:
+                        self.queue.task_done()
+
+                except Queue.Empty:
+                    continue
+        except Exception as ex:
+            self.logger.exception('Thread crash!')
+
 
     def _get_grabber(self):
         return InstaGrabber(self.logins[self._current_client]['CLIENT_ID'],

@@ -15,6 +15,8 @@ import Queue
 
 from htmapp.logger import get_logger
 
+from peewee import OperationalError
+
 
 def summarize_tags(threads_count=100):
     from tags_summarizing_thread import TagsSummarizingThread
@@ -68,7 +70,7 @@ def update_tags(threads_count, memory):
     lock = threading.Lock()
 
     threads = []
-    for i in range(threads_count):
+    for i in range(1):
         t = TagsUpdaterThread(areas_queue, lock, current_app.config['LOGINS'], get_logger())
         threads.append(t)
         t.start()
@@ -110,6 +112,8 @@ def update_tags(threads_count, memory):
         get_logger().info("{0} hour-areas added to {1}".format(count, location.name))
 
         update_location_time(location)
+
+    get_logger().info('Waiting for all threads')
 
     # hope that putting is faster than processing
     areas_queue.join()

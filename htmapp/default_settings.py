@@ -18,10 +18,10 @@ GOOGLE_MAP_KEY = ''
 
 LOGINS = [{ 'CLIENT_ID': '', 'CLIENT_SECRET': '' }]
 
-UPDATE_THREADS_COUNT = 20
+UPDATE_THREADS_COUNT = 50
 TAGS_MEMORY = 24 * 3600
 TAGS_TIME_PERIOD = 3600
 
-LOG_FILE = '/tmp/hashtagmap.log'
-LOG_FILE_DEBUG = '/tmp/hashtagmap-debug.log'
+LOG_FILE = '/var/log/hashtagmap/htm.log'
+LOG_FILE_DEBUG = '/var/log/hashtagmap/htm-debug.log'
 LOG_FORMAT = '[%(asctime)s] %(filename)s[%(lineno)d] #%(levelname)-8s  %(message)s'

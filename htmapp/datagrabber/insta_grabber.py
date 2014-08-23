@@ -13,19 +13,21 @@ class InstaGrabber:
     def find_tags(self, coords, distance, max_date, min_date, ignore_list=[]):
         tags = {}
         max_stamp = max_date
-        last_id = -1
         while max_stamp > min_date:
-            #print "Request for {0} {1} - {2} send".format(coords, min_date, max_date)
+            print "Request for {0} {1} - {2} send".format(coords, min_date, max_date)
             media = self.__api.media_search(lat=coords[0], lng=coords[1], distance=distance, \
                 max_timestamp=max_stamp, count=self.MAX_SEARCH_COUNT)
-            #print "Answer for {0} {1} - {2} received".format(coords, min_date, max_date)
+            print "Answer for {0} {1} - {2} received".format(coords, min_date, max_date)
 
             if len(media) == 0:
                 break
 
             self.__cals_tags(tags, media, max_stamp, min_date, ignore_list)
 
-            max_stamp = datetime_to_timestamp(media[-1].created_time)
+            if max_stamp <= datetime_to_timestamp(media[-1].created_time):
+                max_stamp = max_stamp - 3600
+            else:
+                max_stamp = datetime_to_timestamp(media[-1].created_time)
         return tags
 
 
