@@ -91,7 +91,10 @@ class TagsUpdaterThread(threading.Thread):
                 self.db_lock.acquire()
                 hashtag = Hashtag.get_or_create(name=tag_name)
                 self.db_lock.release()
-                HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
+                try:
+                    HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
+                except Exception:
+                    self.logger.exception("Tags dublicate '{1}'! {0}".format(', '.join(tags), tag))
 
             area_hour.processed = datetime.datetime.now()
             area_hour.save()
