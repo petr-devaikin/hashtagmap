@@ -16,8 +16,10 @@ function get_map_url(latitude, longitude) {
 
 
         "&style=feature:road%7Csaturation:-100" +
-        "&style=feature:road.local%7Clightness:30" +
-        "&style=feature:road.arterial%7Clightness:30" +
+        "&style=feature:road.local%7Clightness:60" +
+        "&style=feature:road.arterial%7Clightness:60" +
+        "&style=element:geometry.stroke%7Cfeature:road.arterial%7Cvisibility:on" +
+        //"&style=element:geometry.fill%7Ceature:road.arterial%7Cvisibility:off" +
         "&style=feature:road.highway%7Clightness:30" +
         //"&style=feature:road.local%7Cvisibility:off" +
 

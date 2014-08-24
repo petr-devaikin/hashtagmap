@@ -38,7 +38,7 @@ class TagsUpdaterThread(threading.Thread):
                         self.logger.debug("Areas left: {0}".format(self.queue.qsize()))
 
                         try:
-                                self.update_tags_for_area(area)
+                            self.update_tags_for_area(area)
                         except InstaGrabberBanException as ex:
                             self.logger.debug("Instagram banned me. Area {0} is not processed: {1}".format(area.id, ex))
                             if not self._change_client():
@@ -77,7 +77,7 @@ class TagsUpdaterThread(threading.Thread):
         #print "Area min max", area_min_stamp, area_max_stamp
 
         self.grabber.find_tags((area.latitude, area.longitude), area.radius,
-            area_max_stamp, area_min_stamp)
+            area_max_stamp, area_min_stamp, self.logger)
 
         for area_hour in area_hours:
             #print "Updating {0}".format(area_hour.id)
