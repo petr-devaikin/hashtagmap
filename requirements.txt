@@ -1,6 +1,5 @@
 Flask==0.10.1
 Flask-Script==2.0.5
--e git+git@github.com:petr-devaikin/hashtagmap.git@c41e9cc914242f0c1ee46604f8586d2930968abd#egg=Hashtag_Map-origin/develop
 Jinja2==2.7.3
 MarkupSafe==0.23
 MySQL-python==1.2.5
