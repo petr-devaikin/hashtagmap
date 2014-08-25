@@ -52,7 +52,7 @@ class TagsUpdaterThread(threading.Thread):
                 except Queue.Empty:
                     continue
         except Exception as ex:
-            self.logger.exception('Thread crash!')
+            self.logger.exception('Thread crashed!')
 
 
     def _get_grabber(self):
@@ -80,6 +80,10 @@ class TagsUpdaterThread(threading.Thread):
             area_max_stamp, area_min_stamp, self.logger)
 
         for area_hour in area_hours:
+            # if something happened while updating and processed flag was not set up
+            for htf in area_hour.hashtag_counts:
+                htf.delete_instance()
+
             #print "Updating {0}".format(area_hour.id)
             max_stamp = calendar.timegm(area_hour.max_stamp.timetuple())
             min_stamp = calendar.timegm(area_hour.min_stamp.timetuple())
@@ -87,14 +91,16 @@ class TagsUpdaterThread(threading.Thread):
 
             #print "{0} tags found".format(len(tags))
 
+            i = 0
             for tag_name in tags:
                 self.db_lock.acquire()
                 hashtag = Hashtag.get_or_create(name=tag_name)
                 self.db_lock.release()
+                i += 1
                 try:
                     HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
                 except Exception:
-                    self.logger.exception("Tags dublicate '{1}'! {0}".format(', '.join(tags), tag))
+                    self.logger.exception("Duplicate {2}: {0} > {1}, {3}".format(len(tags), len(set(tags)), i, hashtag.name == tag_name))
 
             area_hour.processed = datetime.datetime.now()
             area_hour.save()

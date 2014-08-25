@@ -67,10 +67,11 @@ class InstaGrabber:
             self.all_media):
             try:
                 for t in m.tags:
-                    if not t.name in tags:
-                        tags[t.name] = 1
+                    utf_tag = t.name.encode('utf-8')
+                    if not utf_tag in tags:
+                        tags[utf_tag] = 1
                     else:
-                        tags[t.name] += 1
+                        tags[utf_tag] += 1
             except AttributeError:
                 pass
         return tags
