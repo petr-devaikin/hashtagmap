@@ -8,6 +8,7 @@ argparse==1.2.1
 httplib2==0.9
 itsdangerous==0.24
 peewee==2.2.5
+psycopg2==2.5.3
 python-instagram==1.1.2
 pytz==2014.4
 simplejson==3.5.3

@@ -8,5 +8,5 @@ setup(
     packages=['htmapp'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=['Flask', 'peewee', 'Flask-Script', 'MySQL-Python', 'python-instagram', 'pytz']
+    install_requires=['Flask', 'peewee', 'Flask-Script', 'MySQL-Python', 'python-instagram', 'pytz', 'psycopg2']
 )
