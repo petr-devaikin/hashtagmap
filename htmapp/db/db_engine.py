@@ -10,7 +10,7 @@ def init_db(app):
         database = MySQLDatabase(app.config['DB_NAME'],
             user=app.config['DB_USER'], password=app.config['DB_PASSWORD'], threadlocals=True)
     else:
-        database = PostgresqlDatabase(app.config['DB_NAME'],
+        database = PostgresqlDatabase(app.config['DB_NAME'], host=app.config['DB_HOST'],
             user=app.config['DB_USER'], password=app.config['DB_PASSWORD'], threadlocals=True)
     _db.initialize(database)
 
