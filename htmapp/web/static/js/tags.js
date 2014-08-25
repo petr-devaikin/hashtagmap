@@ -1,5 +1,3 @@
-
-
 var MAP_WIDTH = 640;
 var MAP_HEIGHT = 640;
 
@@ -11,10 +9,10 @@ if (location_name == "London") {
     MAP_LONGITUDE = 0.2196;
 }
 
-var PIXELS_PER_KM = 35;
 var PIXELS_PER_LATITUDE = MAP_WIDTH / MAP_LATITUDE;
 var PIXELS_PER_LONGITUDE = MAP_HEIGHT / MAP_LONGITUDE;
 
+var FONT_FAMILY = 'sans-serif';
 
 
 function draw_tags() {
@@ -24,7 +22,7 @@ function draw_tags() {
     var areas = document.getElementsByClassName('tag_area');
     for (i = 0; i < areas.length; i++) {
         var group = new HashtagGroup(areas[i]);
-        group.drawTag(test_context);
+        group.drawTag(test_context, FONT_FAMILY);
     }
 }
 
