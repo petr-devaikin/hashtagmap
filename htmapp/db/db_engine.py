@@ -4,18 +4,18 @@ from peewee import *
 _db = Proxy()
 
 def init_db(app):
-    if app.config['TESTING']:
-        database = SqliteDatabase(app.config['TEST_DATABASE'], threadlocals=True)
-    elif app.config['DEBUG']:
-        database = MySQLDatabase(app.config['DB_NAME'],
-            user=app.config['DB_USER'], password=app.config['DB_PASSWORD'], threadlocals=True)
+    if app.config['DATABASE']['ENGINE'] == 'Sqlite':
+        database = SqliteDatabase(app.config['DATABASE']['NAME'], threadlocals=True,
+            **app.config['DATABASE']['PARAMS'])
+    elif app.config['DATABASE']['ENGINE'] == 'MySQL':
+        database = MySQLDatabase(app.config['DATABASE']['NAME'], threadlocals=True,
+            **app.config['DATABASE']['PARAMS'])
+    elif app.config['DATABASE']['ENGINE'] == 'Postgresql':
+        database = PostgresqlDatabase(app.config['DATABASE']['NAME'], threadlocals=True,
+            **app.config['DATABASE']['PARAMS'])
     else:
-        database = PostgresqlDatabase(app.config['DB_NAME'],
-            host=app.config['DB_HOST'],
-            port=app.config['DB_PORT'],
-            user=app.config['DB_USER'],
-            password=app.config['DB_PASSWORD'],
-            threadlocals=True)
+        raise Exception('Unknown database engine')
+
     _db.initialize(database)
 
 def get_db():
