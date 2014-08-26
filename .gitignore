@@ -3,4 +3,5 @@
 *.db
 venv/
 instance/
+*.egg/
 *.egg-info

@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from flask.ext.script import Manager
 from htmapp.web.application_factory import create_app, init_app
+from gunicorn_server import GunicornServer
 
 app = create_app()
 init_app(app)
 manager = Manager(app)
+
+manager.add_command('gunicorn', GunicornServer())
 
 @manager.command
 def hello():
