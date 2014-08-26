@@ -101,6 +101,10 @@ class TagsUpdaterThread(threading.Thread):
                     HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
                 except Exception:
                     self.logger.exception("Duplicate {2}: {0} > {1}, {3}".format(len(tags), len(set(tags)), i, hashtag.name == tag_name))
+                    hf = HashtagFrequency.select().where(HashtagFrequency.area_in_hour << [area_hour],
+                        HashtagFrequency.hashtag << [hashtag]).get()
+                    hf.count += tags[tag_name]
+                    hf.save()
 
             area_hour.processed = datetime.datetime.now()
             area_hour.save()
