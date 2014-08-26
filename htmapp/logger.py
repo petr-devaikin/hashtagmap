@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask import current_app
 from logging.handlers import TimedRotatingFileHandler
+from logging import StreamHandler
 import logging
+import sys
 
 class DebugFilter(logging.Filter):
     def filter(self, record):
@@ -11,17 +13,17 @@ def get_logger():
     return current_app.logger
 
 def set_logger_params(app):
-    if app.config['LOG_FILE_DEBUG'] != None:
+    if app.config['LOGGER']['DEBUG_PATH'] != None:
+        debug_handler = TimedRotatingFileHandler(app.config['LOGGER']['DEBUG_PATH'], when='D', interval=1)
         f = DebugFilter()
-        debug_handler = TimedRotatingFileHandler(app.config['LOG_FILE_DEBUG'], when='D', interval=1)
         debug_handler.addFilter(f)
         debug_handler.setLevel(logging.DEBUG)
-        debug_handler.setFormatter(logging.Formatter(app.config['LOG_FORMAT']))
+        debug_handler.setFormatter(logging.Formatter(app.config['LOGGER']['FORMAT']))
         app.logger.addHandler(debug_handler)
 
-    if app.config['LOG_FILE'] != None:
-        handler = TimedRotatingFileHandler(app.config['LOG_FILE'], when='D', interval=1)
+    if app.config['LOGGER']['PATH'] != None:
+        handler = TimedRotatingFileHandler(app.config['LOGGER']['PATH'], when='D', interval=1)
         handler.setLevel(logging.INFO)
-        handler.setFormatter(logging.Formatter(app.config['LOG_FORMAT']))
+        handler.setFormatter(logging.Formatter(app.config['LOGGER']['FORMAT']))
         app.logger.addHandler(handler)
 

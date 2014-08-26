@@ -2,9 +2,11 @@
 DEBUG = True
 SECRET_KEY = 'development key'
 
-DB_NAME = 'database'
-DB_USER = 'user'
-DB_PASSWORD = 'password'
+DATABASE = {
+    'ENGINE': 'MySQL',
+    'NAME': 'database',
+    'PARAMS': { 'user': 'user', 'password': 'password', 'host': 'localhost', 'port': 8888 }
+}
 
 COMMON_IGNORE = [u'instasize', u'love',
     u'vsco', u'vscocam', u'vscophoto', u'vscogood', u'vscobest', u'vscodaily', u'vscolike',
@@ -24,6 +26,8 @@ SUMMARIZE_THREADS_COUNT = 30
 TAGS_MEMORY = 24 * 3600
 TAGS_TIME_PERIOD = 3600
 
-LOG_FILE = '/var/log/hashtagmap/htm.log'
-LOG_FILE_DEBUG = '/var/log/hashtagmap/htm-debug.log'
-LOG_FORMAT = '[%(asctime)s] %(filename)s[%(lineno)d] #%(levelname)-8s  %(message)s'
+LOGGER = {
+    'FORMAT': '[%(asctime)s] %(filename)s[%(lineno)d] #%(levelname)-8s  %(message)s',
+    'PATH': '/var/log/hashtagmap/htm.log',
+    'DEBUG_PATH': '/var/log/hashtagmap/htm-debug.log'
+}
