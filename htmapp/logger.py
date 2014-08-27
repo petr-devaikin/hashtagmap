@@ -14,7 +14,7 @@ def get_logger():
 
 def set_logger_params(app):
     if app.config['LOGGER']['DEBUG_PATH'] != None:
-        debug_handler = TimedRotatingFileHandler(app.config['LOGGER']['DEBUG_PATH'], when='D', interval=1)
+        debug_handler = TimedRotatingFileHandler(app.config['LOGGER']['DEBUG_PATH'], when='midnight', interval=1)
         f = DebugFilter()
         debug_handler.addFilter(f)
         debug_handler.setLevel(logging.DEBUG)
@@ -22,7 +22,7 @@ def set_logger_params(app):
         app.logger.addHandler(debug_handler)
 
     if app.config['LOGGER']['PATH'] != None:
-        handler = TimedRotatingFileHandler(app.config['LOGGER']['PATH'], when='D', interval=1)
+        handler = TimedRotatingFileHandler(app.config['LOGGER']['PATH'], when='midnight', interval=1)
         handler.setLevel(logging.INFO)
         handler.setFormatter(logging.Formatter(app.config['LOGGER']['FORMAT']))
         app.logger.addHandler(handler)
