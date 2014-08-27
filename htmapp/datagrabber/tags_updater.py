@@ -4,7 +4,6 @@ import datetime
 import pytz
 
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
-from htmapp.db.models.hashtag_frequency_sum import HashtagFrequencySum
 from htmapp.db.models.location import Location
 from htmapp.db.models.simple_area import SimpleArea
 from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
@@ -26,8 +25,6 @@ def summarize_tags(threads_count=100):
     areas_queue = Queue.Queue()
 
     for location in Location.select():
-        HashtagFrequencySum.delete().where(HashtagFrequencySum.area << location.simple_areas).execute()
-
         for area in location.simple_areas:
             areas_queue.put(area)
 
@@ -68,7 +65,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
 
     areas_queue = Queue.Queue()
     lock = threading.Lock()
-    
+    """
     threads = []
     for i in range(request_threads_count):
         t = TagsUpdaterThread(areas_queue, lock, current_app.config['LOGINS'], get_logger())
@@ -127,7 +124,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
 
     for t in threads:
         t.join()
-
+    """
     summarize_tags(summarize_threads_count)
 
     get_logger().info('Tags summarized')

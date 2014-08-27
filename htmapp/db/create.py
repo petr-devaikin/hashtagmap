@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
-from htmapp.db.models.hashtag_frequency_sum import HashtagFrequencySum
 from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
 from htmapp.db.models.simple_area import SimpleArea
 from htmapp.db.models.ignore_for_location import IgnoreForLocation
@@ -13,10 +12,6 @@ def drop_tables():
     if HashtagFrequency.table_exists():
         HashtagFrequency.drop_table()
         get_logger().info('HashtagFrequency table dropped')
-
-    if HashtagFrequencySum.table_exists():
-        HashtagFrequencySum.drop_table()
-        get_logger().info('HashtagFrequencySum table dropped')
         
     if TagsOfAreaInHour.table_exists():
         TagsOfAreaInHour.drop_table()
@@ -64,9 +59,6 @@ def create_tables():
 
     HashtagFrequency.create_table()
     get_logger().info('HashtagFrequency table created')
-
-    HashtagFrequencySum.create_table()
-    get_logger().info('HashtagFrequencySum table created')
 
 
 def init_data():

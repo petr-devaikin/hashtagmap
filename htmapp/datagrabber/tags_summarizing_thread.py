@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import threading
 import Queue
-from htmapp.db.models.hashtag_frequency_sum import HashtagFrequencySum
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
 from htmapp.db.models.hashtag import Hashtag
 from htmapp.db.models.simple_area import SimpleArea
@@ -26,34 +25,24 @@ class TagsSummarizingThread(threading.Thread):
             except Queue.Empty:
                 break
 
-    @staticmethod
-    def calc_most_popular_tag_for_area(area, ignore=[]):
-        sq = area.hashtag_counts_sum.join(Hashtag)
-        where = sq.where(~(Hashtag.name << ignore)).order_by(HashtagFrequencySum.count.desc())
-        tag = where.first()
-        if tag == None:
-            area.most_popular_tag_name = None
-            area.most_popular_tag_count = None
-        else:
-            area.most_popular_tag_name = tag.hashtag.name
-            area.most_popular_tag_count = tag.count
-        area.save()
-
-
     def recalc_tags_for_area(self, area):
-        select = HashtagFrequency.select(HashtagFrequency.area_in_hour, HashtagFrequency.hashtag, fn.Sum(HashtagFrequency.count).alias('sum'))
-        join = select.join(TagsOfAreaInHour).join(SimpleArea)
-        where = join.where(TagsOfAreaInHour.area == area)
-        group = where.group_by(HashtagFrequency.hashtag, TagsOfAreaInHour.area)
-
-        for h in group:
-            sum_count = HashtagFrequencySum(hashtag=h.hashtag, area=h.area_in_hour.area)
-            sum_count.count = h.sum
-            sum_count.save()
-
         ignore = [] + self.common_ignore
         for tag in area.location.ignore_list:
             ignore.append(tag.tag)
-        TagsSummarizingThread.calc_most_popular_tag_for_area(area, ignore)
+
+        hf_sum = fn.Sum(HashtagFrequency.count)
+
+        select = Hashtag.select(Hashtag, hf_sum.alias('sum')).join(HashtagFrequency).join(TagsOfAreaInHour)
+        where = select.where(TagsOfAreaInHour.area == area, ~(Hashtag.name << ignore))
+        group = where.group_by(Hashtag).order_by(hf_sum.desc())
+
+        if where.count() > 0:
+            tag = group.get()
+            area.most_popular_tag_name = tag.name
+            area.most_popular_tag_count = tag.sum
+        else:
+            area.most_popular_tag_name = None
+            area.most_popular_tag_count = None
+        area.save()
 
         self.logger.debug("Area {0} of {1} recalculated".format(area.id, area.location.name))
