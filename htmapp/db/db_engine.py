@@ -10,9 +10,9 @@ def init_db(app):
     elif app.config['DATABASE']['ENGINE'] == 'MySQL':
         database = MySQLDatabase(app.config['DATABASE']['NAME'], threadlocals=True,
             **app.config['DATABASE']['PARAMS'])
-    elif app.config['DATABASE']['ENGINE'] == 'Postgresql':
-        database = PostgresqlDatabase(app.config['DATABASE']['NAME'], threadlocals=True,
-            **app.config['DATABASE']['PARAMS'])
+    #elif app.config['DATABASE']['ENGINE'] == 'Postgresql':
+    #    database = PostgresqlDatabase(app.config['DATABASE']['NAME'], threadlocals=True,
+    #        **app.config['DATABASE']['PARAMS'])
     else:
         raise Exception('Unknown database engine')
 
