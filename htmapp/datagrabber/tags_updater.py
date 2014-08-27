@@ -65,7 +65,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
 
     areas_queue = Queue.Queue()
     lock = threading.Lock()
-    """
+    
     threads = []
     for i in range(request_threads_count):
         t = TagsUpdaterThread(areas_queue, lock, current_app.config['LOGINS'], get_logger())
@@ -124,7 +124,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
 
     for t in threads:
         t.join()
-    """
+    
     summarize_tags(summarize_threads_count)
 
     get_logger().info('Tags summarized')

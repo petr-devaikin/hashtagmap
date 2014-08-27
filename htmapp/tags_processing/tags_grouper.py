@@ -2,6 +2,7 @@
 from htmapp.db.models.location import Location
 from htmapp.db.models.simple_area import SimpleArea
 from htmapp.db.models.area_group import AreaGroup
+from htmapp.db.db_engine import get_db
 
 
 class TagGroup(object):
@@ -67,8 +68,6 @@ class TagsGrouper(object):
             group.save()
 
     def process(self):
-        self._clear_old_groups()
-
         queue = []
         groups = []
         for a in self.location.simple_areas.order_by(SimpleArea.row, SimpleArea.column):
@@ -101,5 +100,7 @@ class TagsGrouper(object):
                         queue.remove(a)
             groups.append(group)
 
-        self._save_groups(groups)
+        with get_db().transaction():
+            self._clear_old_groups()
+            self._save_groups(groups)
 
