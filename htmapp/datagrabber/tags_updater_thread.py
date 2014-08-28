@@ -79,6 +79,9 @@ class TagsUpdaterThread(threading.Thread):
         self.grabber.find_tags((area.latitude, area.longitude), area.radius,
             area_max_stamp, area_min_stamp, self.logger)
 
+
+        logger.debug("{0} tags for area {1} found".format(len(self.grabber.all_media), area.id))
+
         for area_hour in area_hours:
             # if something happened while updating and processed flag was not set up
             for htf in area_hour.hashtag_counts:
