@@ -80,7 +80,7 @@ class TagsUpdaterThread(threading.Thread):
             area_max_stamp, area_min_stamp, self.logger)
 
 
-        logger.debug("{0} tags for area {1} found".format(len(self.grabber.all_media), area.id))
+        self.logger.debug("{0} tags for area {1} found".format(len(self.grabber.all_media), area.id))
 
         for area_hour in area_hours:
             # if something happened while updating and processed flag was not set up
