@@ -31,7 +31,8 @@ class InstaGrabber:
         while max_stamp > min_date:
             #print "Request for {0} {1} - {2} send".format(coords, min_date, max_date)
             try:
-                logger.debug("Send request {0}".format(threading.current_thread().ident))
+                logger.debug("Send request {0}: lat:{1} long:{2} dist:{3} max:{4} count:{5}".format(
+                    threading.current_thread().ident, coords[0], coords[1], distance, max_stamp, self.MAX_SEARCH_COUNT))
                 media = self.__api.media_search(lat=coords[0], lng=coords[1], distance=distance, \
                     max_timestamp=max_stamp, count=self.MAX_SEARCH_COUNT)
             except InstagramAPIError as ex:
