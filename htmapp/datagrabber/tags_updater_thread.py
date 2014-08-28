@@ -94,6 +94,8 @@ class TagsUpdaterThread(threading.Thread):
 
             #print "{0} tags found".format(len(tags))
 
+            self.logger.debug("Update area-hour {0} tags for area {1} found".format(len(tags), area.id))
+
             i = 0
             for tag_name in tags:
                 self.db_lock.acquire()
