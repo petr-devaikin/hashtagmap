@@ -54,7 +54,7 @@ def update_location_time(location):
     if all_hours.count() == 0:
         location.updated = None
     else:
-        location.updated = all_hours.first().max_stamp
+        location.updated =  all_hours.first().max_stamp
     location.save()
 
 
@@ -74,7 +74,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
 
 
     for location in Location.select():
-        now = datetime.datetime.now(tz=pytz.timezone(location.timezone)).replace(tzinfo=None)
+        now = datetime.datetime.now(tz=pytz.timezone('GMT')).replace(tzinfo=None)
         last_memory_time = now - datetime.timedelta(seconds=memory)
         small_delta = datetime.timedelta(seconds=current_app.config['TAGS_TIME_PERIOD'])
 
