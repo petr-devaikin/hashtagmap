@@ -10,6 +10,15 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     </head>
     <body>
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.0";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
         <div id="main_container">
             <div id="map_container"></div>
             <canvas id="test_canvas" width="100%"></canvas>
@@ -31,8 +40,7 @@
             {% endfor %}
         </div>
         <div id="header">
-            <span id="info_button">info</span>
-            <div>
+            <div id="site_name">
                 <h1><a href="{{ url_for('htm_app.index') }}">Hashtag Map</a></h1>
             </div>
 
@@ -48,6 +56,17 @@
                         </div>
                     {% endif %}
                 {% endfor %}
+            </div>
+
+            <span id="info_button">info</span>
+
+            <div id="social_buttons">
+                <div id="twitter_button">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://hashtag-urbanmap.rhcloud.com" data-via="devaikin" data-hashtags="hashtagmap">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                </div>
+
+                <div class="fb-like" data-href="http://hashtag-urbanmap.rhcloud.com" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
             </div>
         </div>
         <div id="info_block">
