@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
 from flask import current_app, Blueprint, render_template, abort, redirect, url_for
 import pytz
+from htmapp.db.db_engine import get_db
 
 htm_app = Blueprint('htm_app', __name__)
+
+@htm_app.before_request
+def before_request():
+    db = get_db()
+    db.connect()
+
+@htm_app.after_request
+def after_request(response):
+    db = get_db()
+    db.close()
+    return response
 
 @htm_app.route('/')
 @htm_app.route('/<location_name>')
