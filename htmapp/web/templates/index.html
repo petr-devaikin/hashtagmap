@@ -22,15 +22,15 @@
         <div id="main_container">
             <div id="map_container"></div>
             <canvas id="test_canvas" width="100%"></canvas>
-            
+
             {% for group in groups %}
-                <div class="tag_area" 
+                <div class="tag_area"
                         area-id="{{ group.id }}"
                         north="{{ group.north }}"
                         south="{{ group.south }}"
                         west="{{ group.west }}"
                         east="{{ group.east }}"
-                        count="{{ group.normal_count() }}" 
+                        count="{{ group.normal_count() }}"
                         radius="{{ group.radius }}"
                         tag="{{ group.tag }}"
                         title="{{ group.tag }}"
@@ -78,9 +78,7 @@
             {{ updated_time }} ({{ location.timezone }})
 
             <h2>Ignored Hashtags</h2>
-            {% for tag in ignore_list %}
-                {{ tag }}{% if not loop.last %},{% endif %}
-            {% endfor %}
+            {{ ', '.join(ignore_list) }}
         </div>
 
         <script>
