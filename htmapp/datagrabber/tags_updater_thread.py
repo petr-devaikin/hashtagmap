@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 import threading
 import Queue
-from insta_grabber import *
-
+import calendar
+import datetime
+from htmapp.datagrabber.insta_grabber import *
 from htmapp.db.models.hashtag import Hashtag
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
 from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
-
-import calendar
-import datetime
 
 class TagsUpdaterThread(threading.Thread):
     def __init__(self, areas_queue, db_lock, logins, logger):

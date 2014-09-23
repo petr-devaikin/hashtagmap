@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 from flask import current_app
 from logging.handlers import TimedRotatingFileHandler
-from logging import StreamHandler
 import logging
 import sys
+
 
 class DebugFilter(logging.Filter):
     def filter(self, record):
         return record.levelname == 'DEBUG'
 
+
 def get_logger():
     return current_app.logger
+
 
 def set_logger_params(app):
     if app.config['LOGGER']['DEBUG_PATH'] != None:

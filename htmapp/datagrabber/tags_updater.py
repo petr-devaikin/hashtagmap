@@ -2,24 +2,20 @@
 import time
 import datetime
 import pytz
-
+import threading
+import Queue
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
 from htmapp.db.models.location import Location
 from htmapp.db.models.simple_area import SimpleArea
 from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
-
 from flask import current_app
-import threading
-import Queue
-
 from htmapp.logger import get_logger
-
-from peewee import OperationalError
+from htmapp.datagrabber.tags_summarizing_thread import TagsSummarizingThread
+from htmapp.datagrabber.tags_updater_thread import TagsUpdaterThread
+from htmapp.tags_processing.tags_grouper import TagsGrouper
 
 
 def summarize_tags(threads_count=100):
-    from tags_summarizing_thread import TagsSummarizingThread
-
     get_logger().info('Summarizing starts')
 
     areas_queue = Queue.Queue()
@@ -49,6 +45,7 @@ def clear_old_hours(location, min_time):
 
     get_logger().info("Location {0}: {1} old hours to remove".format(location.name, count))
 
+
 def update_location_time(location):
     all_hours = TagsOfAreaInHour.select().where(TagsOfAreaInHour.area << location.simple_areas).order_by(TagsOfAreaInHour.max_stamp.desc())
     if all_hours.count() == 0:
@@ -59,8 +56,6 @@ def update_location_time(location):
 
 
 def update_tags(request_threads_count, summarize_threads_count, memory):
-    from tags_updater_thread import TagsUpdaterThread
-
     get_logger().info('Tags update starts')
 
     areas_queue = Queue.Queue()
@@ -71,7 +66,6 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         t = TagsUpdaterThread(areas_queue, lock, current_app.config['LOGINS'], get_logger())
         threads.append(t)
         t.start()
-
 
     for location in Location.select():
         now = datetime.datetime.now(tz=pytz.timezone('GMT')).replace(tzinfo=None)
@@ -98,7 +92,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
                     min_stamp=cur_max_time)
                 count += 1
 
-            cur_max_time = cur_max_time + small_delta
+            cur_max_time += small_delta
 
         get_logger().info("{0} hour-areas added to {1}".format(count, location.name))
 
@@ -117,19 +111,14 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
 
     get_logger().info('Areas updated')
 
-    for t in threads:
-        t.stop()
-
+    for t in threads: t.stop()
     get_logger().debug('Threads stopping')
 
-    for t in threads:
-        t.join()
+    for t in threads: t.join()
     
     summarize_tags(summarize_threads_count)
 
     get_logger().info('Tags summarized')
-
-    from htmapp.tags_processing.tags_grouper import TagsGrouper
 
     for location in Location.select():
         grouper = TagsGrouper(location.id)

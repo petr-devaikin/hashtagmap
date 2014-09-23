@@ -6,6 +6,7 @@ from instagram.bind import InstagramAPIError, InstagramClientError
 
 import threading
 
+
 class InstaGrabberBanException(Exception):
     def __init__(self, error_message, status_code=None):
         self.status_code = status_code
@@ -13,27 +14,28 @@ class InstaGrabberBanException(Exception):
 
     def __str__(self):
         if self.status_code:
-            return "(%s) %s" % (self.status_code, self.error_message)
+            return "({0}) {1}".format(self.status_code, self.error_message)
         else:
             return self.error_message
 
+
 class InstaGrabber:
     MAX_SEARCH_COUNT = 100
+    MAX_ATTEMPTS = 3
 
     def __init__(self, client_id, client_secret):
         self.__api = InstagramAPI(client_id=client_id, client_secret=client_secret)
 
-
     def find_tags(self, coords, distance, max_date, min_date, logger):
-        self.all_media = []
+        self.all_media = set()
         max_stamp = max_date
-        attempts = 3
+        attempts = MAX_ATTEMPTS
+
         while max_stamp > min_date:
-            #print "Request for {0} {1} - {2} send".format(coords, min_date, max_date)
             try:
                 logger.debug("Send request {0}: lat:{1} long:{2} dist:{3} max:{4} count:{5}".format(
                     threading.current_thread().ident, coords[0], coords[1], distance, max_stamp, self.MAX_SEARCH_COUNT))
-                media = self.__api.media_search(lat=coords[0], lng=coords[1], distance=distance, \
+                media = self.__api.media_search(lat=coords[0], lng=coords[1], distance=distance,
                     max_timestamp=max_stamp, count=self.MAX_SEARCH_COUNT)
             except InstagramAPIError as ex:
                 if ex.error_type == "Rate limited":
@@ -42,19 +44,15 @@ class InstaGrabber:
                     raise ex
             except InstagramClientError as ex:
                 if attempts > 0:
-                    attempts = attempts - 1
+                    attempts -= 1
                     continue
                 else:
                     raise ex
             logger.debug("Answer received {0}".format(threading.current_thread().ident))
-            #print "Answer for {0} {1} - {2} received".format(coords, min_date, max_date)
 
-            if len(media) == 0:
-                break
+            if len(media) == 0: break
 
-            for m in media:
-                if not m in self.all_media:
-                    self.all_media.append(m)
+            self.all_media |= set(media)
 
             if max_stamp <= datetime_to_timestamp(media[-1].created_time):
                 max_stamp = max_stamp - 3600
@@ -64,8 +62,11 @@ class InstaGrabber:
 
     def calc_tags(self, max_timestamp, min_timestamp):
         tags = {}
-        for m in filter(lambda am: datetime_to_timestamp(am.created_time) < max_timestamp and datetime_to_timestamp(am.created_time) >= min_timestamp,
-            self.all_media):
+
+        is_media_in_range = lambda m: datetime_to_timestamp(m.created_time) < max_timestamp and \
+                                      datetime_to_timestamp(m.created_time) >= min_timestamp
+
+        for m in filter(is_media_in_range, self.all_media):
             try:
                 for t in m.tags:
                     utf_tag = t.name.encode('utf-8')
@@ -76,5 +77,3 @@ class InstaGrabber:
             except AttributeError:
                 pass
         return tags
-            #else:
-            #    print "missed {0}".format(datetime_to_timestamp(m.created_time))
