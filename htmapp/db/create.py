@@ -7,6 +7,8 @@ from htmapp.db.models.location import Location
 from htmapp.db.models.hashtag import Hashtag
 from htmapp.db.models.area_group import AreaGroup
 from htmapp.logger import get_logger
+from htmapp.db.models.create_msk_location import *
+from htmapp.db.models.create_london_location import *
 
 def drop_tables():
     if HashtagFrequency.table_exists():
@@ -62,9 +64,6 @@ def create_tables():
 
 
 def init_data():
-    from create_msk_location import *
-    from create_london_location import *
-
     create_msk_location()
     create_london_location()
     
