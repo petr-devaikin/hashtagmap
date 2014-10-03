@@ -72,9 +72,8 @@ class InstaGrabber:
                 for t in m.tags:
                     utf_tag = t.name.encode('utf-8')
                     if not utf_tag in tags:
-                        tags[utf_tag] = 1
-                    else:
-                        tags[utf_tag] += 1
+                        tags[utf_tag] = 0
+                    tags[utf_tag] += 1
             except AttributeError:
                 pass
         return tags

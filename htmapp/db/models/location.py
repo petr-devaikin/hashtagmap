@@ -6,7 +6,7 @@ from htmapp.db.db_engine import get_db
 db = MySQLDatabase(None, threadlocals=True)
 
 class Location(Model):
-    name = CharField()
+    name = CharField(unique=True)
     north = DoubleField()
     south = DoubleField()
     west = DoubleField()

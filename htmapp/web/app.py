@@ -51,8 +51,11 @@ def index(location_name=None):
     ignore_list = current_app.config['COMMON_IGNORE'] + [t.tag for t in location.ignore_list]
     ignore_list = sorted(ignore_list)
 
-    updated_time = location.updated.replace(tzinfo=pytz.timezone('GMT'))
-    updated_time = updated_time.astimezone(pytz.timezone(location.timezone)).replace(tzinfo=None)
+    if location.updated:
+        updated_time = location.updated.replace(tzinfo=pytz.timezone('GMT'))
+        updated_time = updated_time.astimezone(pytz.timezone(location.timezone)).replace(tzinfo=None)
+    else:
+        updated_time = ''
 
     return render_template('index.html', max_count=max_count, lat_km=lat_km,
         long_km=long_km, location=location, location_list=Location.select(), groups=groups,

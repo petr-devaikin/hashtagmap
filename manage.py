@@ -2,7 +2,7 @@
 from flask.ext.script import Manager
 from htmapp.web.application_factory import create_app, init_app
 from htmapp.logger import get_logger
-from htmapp.db.create import init_database
+from htmapp.db.scripts.create import init_database
 from htmapp.datagrabber.tags_updater import update_tags
 
 app = create_app()

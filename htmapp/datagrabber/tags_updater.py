@@ -4,11 +4,11 @@ import datetime
 import pytz
 import threading
 import Queue
+from flask import current_app
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
 from htmapp.db.models.location import Location
 from htmapp.db.models.simple_area import SimpleArea
 from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
-from flask import current_app
 from htmapp.logger import get_logger
 from htmapp.datagrabber.tags_summarizing_thread import TagsSummarizingThread
 from htmapp.datagrabber.tags_updater_thread import TagsUpdaterThread
@@ -20,9 +20,7 @@ def summarize_tags(threads_count=100):
 
     areas_queue = Queue.Queue()
 
-    for location in Location.select():
-        for area in location.simple_areas:
-            areas_queue.put(area)
+    for area in SimpleArea.select(): areas_queue.put(area)
 
     threads = []
     for i in range(threads_count):
@@ -48,10 +46,7 @@ def clear_old_hours(location, min_time):
 
 def update_location_time(location):
     all_hours = TagsOfAreaInHour.select().where(TagsOfAreaInHour.area << location.simple_areas).order_by(TagsOfAreaInHour.max_stamp.desc())
-    if all_hours.count() == 0:
-        location.updated = None
-    else:
-        location.updated =  all_hours.first().max_stamp
+    location.updated = all_hours.first().max_stamp if all_hours.count() else None
     location.save()
 
 
@@ -75,10 +70,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         clear_old_hours(location, last_memory_time)
         update_location_time(location)
 
-        if location.updated == None:
-            start_time = last_memory_time
-        else:
-            start_time = location.updated
+        start_time = location.updated or last_memory_time
 
         get_logger().info("Add new hour-areas to {0}".format(location.name))
 
@@ -88,7 +80,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         while cur_max_time + small_delta <= now:
             for area in SimpleArea.select().where(SimpleArea.location == location):
                 tah = TagsOfAreaInHour.create(area=area,
-                    max_stamp=cur_max_time+small_delta,
+                    max_stamp=cur_max_time + small_delta,
                     min_stamp=cur_max_time)
                 count += 1
 

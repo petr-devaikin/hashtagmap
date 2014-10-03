@@ -3,6 +3,7 @@ import threading
 import Queue
 import calendar
 import datetime
+import peewee
 from htmapp.datagrabber.insta_grabber import *
 from htmapp.db.models.hashtag import Hashtag
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
@@ -28,29 +29,28 @@ class TagsUpdaterThread(threading.Thread):
         return self._stop.isSet()
 
     def run(self):
-        try:
-            while not self.stopped():
-                try:
-                    area = self.queue.get(timeout=1)
-                    if not self._pass_everything:
-                        self.logger.debug("Areas left: {0}".format(self.queue.qsize()))
+        while not self.stopped():
+            try:
+                area = self.queue.get(timeout=1)
+                if not self._pass_everything:
+                    self.logger.debug("Areas left: {0}".format(self.queue.qsize()))
 
-                        try:
-                            self.update_tags_for_area(area)
-                        except InstaGrabberBanException as ex:
-                            self.logger.debug("Instagram banned me. Area {0} is not processed: {1}".format(area.id, ex))
-                            if not self._change_client():
-                                self.logger.debug("Last instagram client expired")
-                                self._pass_everything = True
-                        except Exception as ex:
-                            self.logger.exception("Area {0} is not processed: {1}".format(area.id, ex))
-                    
-                    self.queue.task_done()
-
-                except Queue.Empty:
-                    continue
-        except Exception as ex:
-            self.logger.exception('Thread crashed!')
+                    try:
+                        self.update_tags_for_area(area)
+                    except InstaGrabberBanException as ex:
+                        self.logger.debug("Instagram banned me. Area {0} is not processed: {1}".format(area.id, ex))
+                        if not self._change_client():
+                            self.logger.debug("Last instagram client expired")
+                            self._pass_everything = True
+                    except Exception:
+                        self.logger.exception("Area {0} is not processed: {1}".format(area.id, ex))
+                
+                self.queue.task_done()
+            except Queue.Empty:
+                continue
+            except Exception:
+                self.logger.exception('Thread crashed!')
+                break
 
 
     def _get_grabber(self):
@@ -102,7 +102,7 @@ class TagsUpdaterThread(threading.Thread):
                 i += 1
                 try:
                     HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
-                except Exception:
+                except peewee.IntegrityError:
                     self.logger.exception("Duplicate {2}: {0} > {1}, {3}".format(len(tags), len(set(tags)), i, hashtag.name == tag_name))
                     hf = HashtagFrequency.select().where(HashtagFrequency.area_in_hour << [area_hour],
                         HashtagFrequency.hashtag << [hashtag]).get()

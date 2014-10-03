@@ -18,12 +18,8 @@ class SimpleArea(Model):
 
     def count_of_tag(self, tag):
         sq = self.hashtag_counts_sum.join(Hashtag).where(Hashtag.name == tag)
-
         h = sq.first()
-        if h == None:
-            return 0
-        else:
-            return sq.first().count
+        return sq.first().count if h else 0
 
     class Meta:
         database = get_db()
