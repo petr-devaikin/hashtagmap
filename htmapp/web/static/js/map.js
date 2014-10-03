@@ -77,14 +77,6 @@ function move_map_to_center() {
 }
 
 function move_map(animation) {
-    $(main_container).stop();
-    if (animation)
-        $(main_container).animate({
-            top: marginTop,
-            left: marginLeft
-        }, "medium");
-    else {
-        main_container.style.top = marginTop + "px";
-        main_container.style.left = marginLeft + "px";
-    }
+    main_container.style.top = marginTop + "px";
+    main_container.style.left = marginLeft + "px";
 }

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-from htmapp.db.models.hashtag_frequency import HashtagFrequency
-from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
-from htmapp.db.models.simple_area import SimpleArea
-from htmapp.db.models.ignore_for_location import IgnoreForLocation
-from htmapp.db.models.location import Location
-from htmapp.db.models.hashtag import Hashtag
-from htmapp.db.models.area_group import AreaGroup
+from .models.hashtag_frequency import HashtagFrequency
+from .models.tags_of_area_in_hour import TagsOfAreaInHour
+from .models.simple_area import SimpleArea
+from .models.ignore_for_location import IgnoreForLocation
+from .models.location import Location
+from .models.hashtag import Hashtag
+from .models.area_group import AreaGroup
 from htmapp.logger import get_logger
-from htmapp.db.models.create_msk_location import *
-from htmapp.db.models.create_london_location import *
+from .create_msk_location import *
+from .create_london_location import *
 
 def drop_tables():
     if HashtagFrequency.table_exists():

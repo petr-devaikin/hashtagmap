@@ -48,9 +48,7 @@ def index(location_name=None):
         if g.normal_count() > max_count:
             max_count = g.normal_count()
 
-    ignore_list = [] + current_app.config['COMMON_IGNORE']
-    for tag in location.ignore_list:
-        ignore_list.append(tag.tag)
+    ignore_list = current_app.config['COMMON_IGNORE'] + [t.tag for t in location.ignore_list]
     ignore_list = sorted(ignore_list)
 
     updated_time = location.updated.replace(tzinfo=pytz.timezone('GMT'))

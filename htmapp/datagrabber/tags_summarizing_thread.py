@@ -24,7 +24,7 @@ class TagsSummarizingThread(threading.Thread):
                 break
 
     def recalc_tags_for_area(self, area):
-        ignore = list(self.common_ignore) + [tag for tag in area.location.ignore_list]
+        ignore = self.common_ignore + [t.tag for t in area.location.ignore_list]
 
         hf_sum = fn.Sum(HashtagFrequency.count)
 

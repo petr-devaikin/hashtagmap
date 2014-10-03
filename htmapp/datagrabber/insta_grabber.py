@@ -63,8 +63,9 @@ class InstaGrabber:
     def calc_tags(self, max_timestamp, min_timestamp):
         tags = {}
 
-        is_media_in_range = lambda m: datetime_to_timestamp(m.created_time) < max_timestamp and \
-                                      datetime_to_timestamp(m.created_time) >= min_timestamp
+        def is_media_in_range(m):
+            return datetime_to_timestamp(m.created_time) < max_timestamp and \
+                   datetime_to_timestamp(m.created_time) >= min_timestamp
 
         for m in filter(is_media_in_range, self.all_media):
             try:
