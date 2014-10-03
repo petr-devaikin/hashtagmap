@@ -43,7 +43,7 @@ class TagsUpdaterThread(threading.Thread):
                             self.logger.debug("Last instagram client expired")
                             self._pass_everything = True
                     except Exception:
-                        self.logger.exception("Area {0} is not processed: {1}".format(area.id, ex))
+                        self.logger.exception("Area {0} is not processed".format(area.id))
                 
                 self.queue.task_done()
             except Queue.Empty:
@@ -82,8 +82,7 @@ class TagsUpdaterThread(threading.Thread):
 
         for area_hour in area_hours:
             # if something happened while updating and processed flag was not set up
-            for htf in area_hour.hashtag_counts:
-                htf.delete_instance()
+            for htf in area_hour.hashtag_counts: htf.delete_instance()
 
             #print "Updating {0}".format(area_hour.id)
             max_stamp = calendar.timegm(area_hour.max_stamp.timetuple())

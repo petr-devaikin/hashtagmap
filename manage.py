@@ -3,7 +3,7 @@ from flask.ext.script import Manager
 from htmapp.web.application_factory import create_app, init_app
 from htmapp.logger import get_logger
 from htmapp.db.scripts.create import init_database
-from htmapp.datagrabber.tags_updater import update_tags
+from htmapp.datagrabber import tags_updater
 
 app = create_app()
 init_app(app)
@@ -36,9 +36,9 @@ def update_tags():
     """
     Update tags in database
     """
-    update_tags(app.config['REQUEST_THREADS_COUNT'],
-                app.config['SUMMARIZE_THREADS_COUNT'],
-                app.config['TAGS_MEMORY'])
+    tags_updater.update_tags(app.config['REQUEST_THREADS_COUNT'],
+                             app.config['SUMMARIZE_THREADS_COUNT'],
+                             app.config['TAGS_MEMORY'])
 
 
 if __name__ == "__main__":

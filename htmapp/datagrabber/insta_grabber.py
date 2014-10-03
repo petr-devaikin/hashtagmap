@@ -29,7 +29,7 @@ class InstaGrabber:
     def find_tags(self, coords, distance, max_date, min_date, logger):
         self.all_media = set()
         max_stamp = max_date
-        attempts = MAX_ATTEMPTS
+        attempts = self.MAX_ATTEMPTS
 
         while max_stamp > min_date:
             try:
