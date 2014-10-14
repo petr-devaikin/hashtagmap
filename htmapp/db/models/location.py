@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from peewee import *
 from htmapp.db.db_engine import get_db
+import pytz
 
 
 db = MySQLDatabase(None, threadlocals=True)
@@ -28,6 +29,13 @@ class Location(Model):
 
     def long_km(self):
         return (self.east - self.west) / (self.north_width + self.south_width) * 2
+
+    def pretty_updated(self):
+        if self.updated:
+            updated_time = self.updated.replace(tzinfo=pytz.timezone('GMT'))
+            return updated_time.astimezone(pytz.timezone(self.timezone)).replace(tzinfo=None)
+        else:
+            return ''
 
     class Meta:
         database = get_db()

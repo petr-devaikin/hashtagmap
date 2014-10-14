@@ -130,3 +130,9 @@ h2 {
     font-size: 14px;
     margin: 15px 0px 4px;
 }
+
+#github {
+    position: absolute;
+    top: 22px;
+    right: 0px;
+}

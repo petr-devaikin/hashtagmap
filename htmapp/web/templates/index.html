@@ -58,12 +58,16 @@
             </div-->
         </div>
         <div id="info_block">
+            <div id="github">
+                <iframe src="http://ghbtns.com/github-btn.html?user=petr-devaikin&repo=hashtagmap&type=fork&count=false"h allowtransparency="true" frameborder="0" scrolling="0" width="62" height="20">
+                </iframe>
+            </div>
             <h2>Hashtag Map v. 1.1</h2>
             &copy; 2014 Petr Devaikin<br/>
             E-mail: <a href="mailto:p.devaikin@gmail.com">p.devaikin@gmail.com</a>
 
             <h2>Last Update</h2>
-            {{ updated_time }} ({{ location.timezone }})
+            {{ location.pretty_updated() }} ({{ location.timezone }})
 
             <h2>Ignored Hashtags</h2>
             {{ ', '.join(ignore_list) }}
@@ -71,8 +75,8 @@
 
         <script>
             var maximum_count = {{ max_count }};
-            var lat_km = {{ lat_km }};
-            var long_km = {{ long_km }};
+            var lat_km = {{ location.lat_km() * 1000 }};
+            var long_km = {{ location.long_km()  * 1000 }};
             var map_key = "{{ map_key }}";
 
             var location_name = "{{ location.name }}";
