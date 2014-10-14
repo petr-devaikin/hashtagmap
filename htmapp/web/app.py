@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import current_app, Blueprint, render_template, abort, redirect, url_for
 import pytz
+import json
 from htmapp.db.db_engine import get_db
 
 htm_app = Blueprint('htm_app', __name__)
@@ -43,10 +44,11 @@ def index(location_name=None):
         max_count = 0
 
     max_count = 0
-    groups = location.area_groups
-    for g in groups:
+    groups = []
+    for g in location.area_groups:
         if g.normal_count() > max_count:
             max_count = g.normal_count()
+        groups.append(g.to_dict())
 
     ignore_list = current_app.config['COMMON_IGNORE'] + [t.tag for t in location.ignore_list]
     ignore_list = sorted(ignore_list)
@@ -58,6 +60,6 @@ def index(location_name=None):
         updated_time = ''
 
     return render_template('index.html', max_count=max_count, lat_km=lat_km,
-        long_km=long_km, location=location, location_list=Location.select(), groups=groups,
+        long_km=long_km, location=location, location_list=Location.select(), groups=json.dumps(groups),
         ignore_list=ignore_list, updated_time=updated_time,
         map_key=current_app.config['GOOGLE_MAP_KEY'])

@@ -3,11 +3,11 @@ from setuptools import setup
 
 setup(
     name='Hashtag Map',
-    version='1.0',
-    long_description=__doc__,
+    version='1.1',
     packages=['htmapp'],
     author='Petr Devaikin',
     author_email='p.devaikin@gmail.com',
+    url='http://hashtag-urbanmap.rhcloud.com/',
     include_package_data=True,
     zip_safe=False,
     setup_requires=['Flask'],

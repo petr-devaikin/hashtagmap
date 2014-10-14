@@ -22,21 +22,9 @@
         <div id="main_container">
             <div id="map_container"></div>
             <canvas id="test_canvas" width="100%"></canvas>
+            <canvas id="tags_canvas"></canvas>
 
             {% for group in groups %}
-                <div class="tag_area"
-                        area-id="{{ group.id }}"
-                        north="{{ group.north }}"
-                        south="{{ group.south }}"
-                        west="{{ group.west }}"
-                        east="{{ group.east }}"
-                        count="{{ group.normal_count() }}"
-                        radius="{{ group.radius }}"
-                        tag="{{ group.tag }}"
-                        title="{{ group.tag }}"
-                        >
-                    <canvas id="canvas_{{ group.id }}"></canvas>
-                </div>
             {% endfor %}
         </div>
         <div id="header">
@@ -70,7 +58,7 @@
             </div-->
         </div>
         <div id="info_block">
-            <h2>Hashtag Map v. 1.0</h2>
+            <h2>Hashtag Map v. 1.1</h2>
             &copy; 2014 Petr Devaikin<br/>
             E-mail: <a href="mailto:p.devaikin@gmail.com">p.devaikin@gmail.com</a>
 
@@ -94,6 +82,8 @@
 
             var MIN_LONGITUDE = {{ location.west }};
             var MAX_LONGITUDE = {{ location.east }};
+
+            var groups = {{ groups | safe }};
         </script>
         <script src="{{ url_for('static', filename='js/canvas_helpers.js') }}"></script>
         <script src="{{ url_for('static', filename='js/map.js') }}"></script>
