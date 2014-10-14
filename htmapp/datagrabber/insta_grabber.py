@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from instagram.client import InstagramAPI
 from instagram.helper import datetime_to_timestamp
-import operator
 from instagram.bind import InstagramAPIError, InstagramClientError
 
 import threading
