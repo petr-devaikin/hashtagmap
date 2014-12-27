@@ -32,6 +32,24 @@ def init_db():
 
 
 @manager.command
+def add_spb():
+    """
+    Add Spb location
+    """
+    from htmapp.db.scripts.create_spb_location import create_spb_location
+    create_spb_location()
+
+
+@manager.command
+def add_berlin():
+    """
+    Add Berlin location
+    """
+    from htmapp.db.scripts.create_berlin_location import create_berlin_location
+    create_berlin_location()
+
+
+@manager.command
 def update_tags():
     """
     Update tags in database
