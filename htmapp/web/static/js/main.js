@@ -1,12 +1,6 @@
 window.onload = function() {
     bind_info_button();
-    set_full_map_size();
     load_map();
-
-    draw_tags();
-
-    set_scroll();
-    move_map_to_center();
 }
 
 function bind_info_button() {

@@ -87,6 +87,8 @@
             var MIN_LONGITUDE = {{ location.west }};
             var MAX_LONGITUDE = {{ location.east }};
 
+            var MAP_ZOOM = 12;
+
             var groups = {{ groups | safe }};
         </script>
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ map_key }}&sensor=false"></script>

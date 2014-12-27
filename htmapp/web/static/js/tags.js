@@ -1,19 +1,4 @@
-var MAP_WIDTH = 640;
-var MAP_HEIGHT = 640;
-
-var MAP_LATITUDE = 0.1237;
-var MAP_LONGITUDE = 0.2196;
-
-if (location_name == "London") {
-    MAP_LATITUDE = 0.1368;
-    MAP_LONGITUDE = 0.2196;
-}
-
-var PIXELS_PER_LATITUDE = MAP_WIDTH / MAP_LATITUDE;
-var PIXELS_PER_LONGITUDE = MAP_HEIGHT / MAP_LONGITUDE;
-
 var FONT_FAMILY = 'sans-serif';
-
 
 function draw_tags() {
     var test_canvas = document.getElementById('test_canvas');
