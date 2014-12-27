@@ -1,7 +1,7 @@
 window.onload = function() {
     bind_info_button();
     set_full_map_size();
-    add_backgroud();
+    load_map();
 
     draw_tags();
 

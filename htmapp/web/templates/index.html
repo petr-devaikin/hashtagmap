@@ -89,6 +89,7 @@
 
             var groups = {{ groups | safe }};
         </script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ map_key }}&sensor=false"></script>
         <script src="{{ url_for('static', filename='js/canvas_helpers.js') }}"></script>
         <script src="{{ url_for('static', filename='js/map.js') }}"></script>
         <script src="{{ url_for('static', filename='js/hashtag_group.js') }}"></script>
