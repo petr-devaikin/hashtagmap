@@ -12,7 +12,7 @@ def create_berlin_location():
         timezone='Europe/Berlin')
     get_logger().info('Berlin location created')
 
-    for tag in [u'berlin', u'germany']:
+    for tag in [u'berlin', u'vscoberlin', u'germany']:
         IgnoreForLocation.create(location=berlin, tag=tag)
 
 

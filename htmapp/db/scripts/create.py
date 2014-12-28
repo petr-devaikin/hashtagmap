@@ -27,15 +27,15 @@ def drop_tables():
         
     if IgnoreForLocation.table_exists():
         IgnoreForLocation.drop_table()
-    get_logger().info('IgnoreForLocation table dropped')
+        get_logger().info('IgnoreForLocation table dropped')
 
     if AreaGroup.table_exists():
         AreaGroup.drop_table()
-    get_logger().info('AreaGroup table dropped')
+        get_logger().info('AreaGroup table dropped')
 
     if Location.table_exists():
         Location.drop_table()
-    get_logger().info('Location table dropped')
+        get_logger().info('Location table dropped')
 
     if Hashtag.table_exists():
         Hashtag.drop_table()

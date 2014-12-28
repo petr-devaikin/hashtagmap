@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='Hashtag Map',
-    version='1.1',
+    version='1.2',
     packages=['htmapp'],
     author='Petr Devaikin',
     author_email='p.devaikin@gmail.com',

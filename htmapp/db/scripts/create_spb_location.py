@@ -12,7 +12,7 @@ def create_spb_location():
         timezone='Europe/Moscow')
     get_logger().info('Saint Petersburg location created')
 
-    for tag in [u'spb', u'питер', u'спб', u'vscospb', u'vscorussia', u'russia']:
+    for tag in [u'spb', u'питер', u'saintpetersburg', u'петербург', u'спб', u'vscospb', u'vscorussia', u'russia']:
         IgnoreForLocation.create(location=spb, tag=tag)
 
 
