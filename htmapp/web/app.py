@@ -45,7 +45,6 @@ def index(location_name=None):
 
     for i in range(group_count):
         k1 = pow((float(i) / group_count), 2)
-        print k1
         k2 = pow((float(i + 1) / group_count), 2)
         legend.append({
             'min': int((max_count - 1) * k1) + 1,

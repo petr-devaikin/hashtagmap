@@ -6,6 +6,7 @@ import threading
 import Queue
 from flask import current_app
 from htmapp.db.models.hashtag_frequency import HashtagFrequency
+from htmapp.db.models.hashtag import Hashtag
 from htmapp.db.models.location import Location
 from htmapp.db.models.simple_area import SimpleArea
 from htmapp.db.models.tags_of_area_in_hour import TagsOfAreaInHour
@@ -13,6 +14,19 @@ from htmapp.logger import get_logger
 from htmapp.datagrabber.tags_summarizing_thread import TagsSummarizingThread
 from htmapp.datagrabber.tags_updater_thread import TagsUpdaterThread
 from htmapp.tags_processing.tags_grouper import TagsGrouper
+from peewee import fn, JOIN_LEFT_OUTER
+
+def clear_old_tags():
+    select = Hashtag.select().join(HashtagFrequency, JOIN_LEFT_OUTER)
+    select = select.group_by(Hashtag).having(fn.Count(HashtagFrequency.id) == 0)
+    count = select.count()
+    get_logger().info("{0} old tags to remove".format(count))
+
+
+    for h in select:
+        h.delete_instance()
+
+    get_logger().info("Old tags to remove")
 
 
 def summarize_tags(threads_count=100):
@@ -108,6 +122,8 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
 
     for t in threads: t.join()
     
+    clear_old_tags()
+
     summarize_tags(summarize_threads_count)
 
     get_logger().info('Tags summarized')
