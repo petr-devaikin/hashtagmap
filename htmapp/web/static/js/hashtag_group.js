@@ -35,12 +35,6 @@ function HashtagGroup(element) {
     this.rotate = (this.height - this.width) > 2 && this.ALLOW_ROTATION;
 }
 
-
-HashtagGroup.prototype.opacity = function(maximum_count) {
-    return 1 - (maximum_count - this.tags_count) / maximum_count;
-}
-
-
 HashtagGroup.prototype.drawTag = function(test_context, drawing_context, font_family) {
     var width = this.width;
     var height = this.height;
@@ -54,7 +48,7 @@ HashtagGroup.prototype.drawTag = function(test_context, drawing_context, font_fa
     var font_size = find_font_size(shortest_word, width, font_family, test_context);
     var shortest_word_width = width_of_word(shortest_word, font_size, font_family, test_context)
 
-    drawing_context.fillStyle = getColor(this.opacity(maximum_count));
+    drawing_context.fillStyle = getColor(this.tags_count);
 
     if (this.rotate) {
         drawing_context.textAlign = 'center';

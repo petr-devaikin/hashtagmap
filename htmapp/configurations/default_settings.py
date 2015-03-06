@@ -26,6 +26,8 @@ SUMMARIZE_THREADS_COUNT = 30
 TAGS_MEMORY = 24 * 3600
 TAGS_TIME_PERIOD = 3600
 
+COLOR_GROUP_COUNT = 7
+
 LOGGER = {
     'FORMAT': '[%(asctime)s] %(filename)s[%(lineno)d] #%(levelname)-8s  %(message)s',
     'PATH': '/var/log/hashtagmap/htm.log',

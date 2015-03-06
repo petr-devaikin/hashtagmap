@@ -39,6 +39,20 @@ def index(location_name=None):
 
     max_count = max([g['count'] for g in groups]) if groups else 0
 
+    legend = []
+    group_count = current_app.config['COLOR_GROUP_COUNT']
+
+
+    for i in range(group_count):
+        k1 = pow((float(i) / group_count), 2)
+        print k1
+        k2 = pow((float(i + 1) / group_count), 2)
+        legend.append({
+            'min': int((max_count - 1) * k1) + 1,
+            'max': int((max_count - 1) * k2) + 1,
+        })
+
     return render_template('index.html', max_count=max_count, groups=json.dumps(groups),
         location=location, location_list=Location.select().order_by(Location.name.desc()), 
-        ignore_list=ignore_list, map_key=current_app.config['GOOGLE_MAP_KEY'])
+        ignore_list=ignore_list, map_key=current_app.config['GOOGLE_MAP_KEY'],
+        legend=legend, legend_json=json.dumps(legend))

@@ -1,5 +1,6 @@
 window.onload = function() {
     bind_info_button();
+    paintLegend();
     load_map();
 }
 

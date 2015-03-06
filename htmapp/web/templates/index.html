@@ -48,6 +48,18 @@
 
             <span id="info_button">info</span>
 
+            <div id="legend">
+                {% for l in legend %}
+                    <div class="legendGroup" v="{{ l['min'] }}">
+                        <span class="min">{{ l['min'] }}</span>
+                        {% if loop.last %}
+                            <span class="max">{{ l['max'] }}</span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <span id="comment">tags for last 24 hours</span>
+            </div>
+
             <!--div id="social_buttons">
                 <div id="twitter_button">
                     <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://hashtag-urbanmap.rhcloud.com" data-via="devaikin" data-hashtags="hashtagmap">Tweet</a>
@@ -87,7 +99,8 @@
             var MIN_LONGITUDE = {{ location.west }};
             var MAX_LONGITUDE = {{ location.east }};
 
-            var MAP_ZOOM = 12;
+            var MAP_ZOOM = 12,
+                legend = {{ legend_json | safe }};
 
             var groups = {{ groups | safe }};
         </script>
@@ -96,6 +109,7 @@
         <script src="{{ url_for('static', filename='js/map.js') }}"></script>
         <script src="{{ url_for('static', filename='js/hashtag_group.js') }}"></script>
         <script src="{{ url_for('static', filename='js/tags.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/legend.js') }}"></script>
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     </body>
 </html>

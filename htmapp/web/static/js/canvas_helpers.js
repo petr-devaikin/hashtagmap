@@ -5,17 +5,17 @@ var MAX_GREEN = 49;
 var MIN_BLUE = 230;
 var MAX_BLUE = 0;
 
-function get_saturation(o) {
-    return Math.pow(o, 0.5);
+function get_saturation(count) {
+    var i = 0;
+    while (count > legend[i].min && i < legend.length - 1) i++;
+    return i / (legend.length);
 }
 
-function getColor(opacity) {
-    var r = Math.floor(MIN_RED + (MAX_RED - MIN_RED) * get_saturation(opacity));
-    var g = Math.floor(MIN_GREEN + (MAX_GREEN - MIN_GREEN) * get_saturation(opacity));
-    var b = Math.floor(MIN_BLUE + (MAX_BLUE - MIN_BLUE) * get_saturation(opacity));
+function getColor(count) {
+    var r = Math.floor(MIN_RED + (MAX_RED - MIN_RED) * get_saturation(count));
+    var g = Math.floor(MIN_GREEN + (MAX_GREEN - MIN_GREEN) * get_saturation(count));
+    var b = Math.floor(MIN_BLUE + (MAX_BLUE - MIN_BLUE) * get_saturation(count));
     return 'rgb(' + r + ',' + g + ',' + b + ')';
-    //var c = Math.floor(255 - 255 * opacity);
-    //return 'rgb(' + c + ',' + c + ',' + c + ')';
 }
 
 function fit_word(word, width, height, font_size, font_famity, context) {
