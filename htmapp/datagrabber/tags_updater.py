@@ -122,8 +122,6 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
     get_logger().debug('Threads stopping')
 
     for t in threads: t.join()
-    
-    clear_old_tags()
 
     summarize_tags(summarize_threads_count)
 
@@ -133,5 +131,8 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         grouper = TagsGrouper(location.id)
         grouper.process()
         get_logger().info("Tags groupped for {0}".format(location.name))
+        
+    
+    clear_old_tags()
 
     get_logger().info('Tags update is done')
