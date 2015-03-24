@@ -28,6 +28,8 @@ TAGS_TIME_PERIOD = 3600
 
 COLOR_GROUP_COUNT = 7
 
+OLD_TAG_REMOVE_LIMIT = 1000
+
 LOGGER = {
     'FORMAT': '[%(asctime)s] %(filename)s[%(lineno)d] #%(levelname)-8s  %(message)s',
     'PATH': '/var/log/hashtagmap/htm.log',

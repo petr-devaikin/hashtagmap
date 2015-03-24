@@ -23,7 +23,7 @@ def clear_old_tags():
     #count = select.count()
     #get_logger().info("{0} old tags to remove".format(count))
 
-    for h in Hashtag.select().limit(100):
+    for h in Hashtag.select().limit(current_app.config['OLD_TAG_REMOVE_LIMIT']):
         if h.counts.count() == 0:
             h.delete_instance()
 
