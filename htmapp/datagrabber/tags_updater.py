@@ -68,9 +68,6 @@ def update_location_time(location):
 def update_tags(request_threads_count, summarize_threads_count, memory):
     get_logger().info('Tags update starts')
 
-    clear_old_tags()
-    return
-
     areas_queue = Queue.Queue()
     lock = threading.Lock()
     
