@@ -17,7 +17,7 @@ from htmapp.tags_processing.tags_grouper import TagsGrouper
 from peewee import fn, JOIN_LEFT_OUTER
 
 def clear_old_tags():
-    get_logger().info("Start to remove old tags"))
+    get_logger().info("Start to remove old tags")
     select = Hashtag.select().join(HashtagFrequency, JOIN_LEFT_OUTER)
     select = select.group_by(Hashtag).having(fn.Count(HashtagFrequency.id) == 0)
     count = select.count()
