@@ -18,14 +18,14 @@ from peewee import fn, JOIN_LEFT_OUTER
 
 def clear_old_tags():
     get_logger().info("Start to remove old tags")
-    select = Hashtag.select().join(HashtagFrequency, JOIN_LEFT_OUTER)
-    select = select.group_by(Hashtag).having(fn.Count(HashtagFrequency.id) == 0).limit(10)
-    count = select.count()
-    get_logger().info("{0} old tags to remove".format(count))
+    #select = Hashtag.select().join(HashtagFrequency, JOIN_LEFT_OUTER)
+    #select = select.group_by(Hashtag).having(fn.Count(HashtagFrequency.id) == 0)
+    #count = select.count()
+    #get_logger().info("{0} old tags to remove".format(count))
 
-
-    for h in select:
-        h.delete_instance()
+    for h in Hashtag.select().limit(100):
+        if h.counts.count() == 0:
+            h.delete_instance()
 
     get_logger().info("Old tags to remove")
 
