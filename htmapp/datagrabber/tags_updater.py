@@ -17,6 +17,7 @@ from htmapp.tags_processing.tags_grouper import TagsGrouper
 from peewee import fn, JOIN_LEFT_OUTER
 
 def clear_old_tags():
+    get_logger().info("Start to remove old tags"))
     select = Hashtag.select().join(HashtagFrequency, JOIN_LEFT_OUTER)
     select = select.group_by(Hashtag).having(fn.Count(HashtagFrequency.id) == 0)
     count = select.count()
@@ -66,6 +67,8 @@ def update_location_time(location):
 
 def update_tags(request_threads_count, summarize_threads_count, memory):
     get_logger().info('Tags update starts')
+
+    clear_old_tags()
 
     areas_queue = Queue.Queue()
     lock = threading.Lock()
