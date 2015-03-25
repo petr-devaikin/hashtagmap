@@ -96,7 +96,10 @@ class TagsUpdaterThread(threading.Thread):
             i = 0
             for tag_name in tags:
                 self.db_lock.acquire()
-                hashtag = Hashtag.get_or_create(name=tag_name)
+                try:
+                    hashtag = Hashtag.get(name==tag_name)
+                except Hashtag.DoesNotExist:
+                    hashtag = Hashtag.create(name=tag_name)
                 self.db_lock.release()
                 i += 1
                 try:
