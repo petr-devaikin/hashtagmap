@@ -99,8 +99,8 @@ class TagsUpdaterThread(threading.Thread):
                 try:
                     hashtag = Hashtag.create(name=tag_name)
                 except peewee.IntegrityError:
-                    self.logger.exception("Hashtag duplicate {0}".format(tag_name))
                     hashtag = Hashtag.get(Hashtag.name==tag_name)
+                    self.logger.exception("Hashtag duplicate id = {0}".format(hashtag.id))
                 self.db_lock.release()
                 i += 1
                 try:
