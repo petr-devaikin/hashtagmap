@@ -95,13 +95,14 @@ class TagsUpdaterThread(threading.Thread):
 
             i = 0
             for tag_name in tags:
-                self.db_lock.acquire()
                 try:
-                    hashtag = Hashtag.create(name=tag_name)
+                    self.db_lock.acquire()
+                    hashtag = Hashtag.get_or_create(name=tag_name)
                 except peewee.IntegrityError:
-                    hashtag = Hashtag.get(Hashtag.name==tag_name)
-                    self.logger.exception("Hashtag duplicate id = {0}".format(hashtag.id))
-                self.db_lock.release()
+                    self.logger.exception("Hashtag duplicate")
+                finally:
+                    self.db_lock.release()
+
                 i += 1
                 try:
                     HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
