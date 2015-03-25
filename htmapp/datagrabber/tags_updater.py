@@ -119,7 +119,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
     get_logger().info('Areas updated')
 
     for t in threads: t.stop()
-    get_logger().debug('Threads stopping')
+    get_logger().info('Threads stopping')
 
     for t in threads: t.join()
 

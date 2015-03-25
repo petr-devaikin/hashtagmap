@@ -23,6 +23,7 @@ class TagsUpdaterThread(threading.Thread):
     _current_client = 0
 
     def stop(self):
+        self.logger.info("Thread received stop signal")
         self._stop.set()
 
     def stopped(self):
