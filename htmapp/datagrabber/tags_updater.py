@@ -23,9 +23,8 @@ def clear_old_tags():
     count = select.count()
     get_logger().info("{0} old tags to remove".format(count))
 
-    #for h in Hashtag.select().limit(current_app.config['OLD_TAG_REMOVE_LIMIT']):
-    #    if h.counts.count() == 0:
-    #        h.delete_instance()
+    for h in select:
+        h.delete_instance()
 
     get_logger().info("Old tags to remove")
 
@@ -119,7 +118,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
     get_logger().info('Areas updated')
 
     for t in threads: t.stop()
-    get_logger().info('Threads stopping')
+    get_logger().debug('Threads stopping')
 
     for t in threads: t.join()
 
