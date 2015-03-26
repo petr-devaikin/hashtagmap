@@ -76,7 +76,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         threads.append(t)
         t.start()
 
-    for location in Location.select():
+    for location in list(Location.select()):
         now = datetime.datetime.now(tz=pytz.timezone('GMT')).replace(tzinfo=None)
         last_memory_time = now - datetime.timedelta(seconds=memory)
         small_delta = datetime.timedelta(seconds=current_app.config['TAGS_TIME_PERIOD'])
@@ -91,7 +91,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         count = 0
         cur_max_time = start_time
         while cur_max_time + small_delta <= now:
-            for area in SimpleArea.select().where(SimpleArea.location == location):
+            for area in location.simple_areas:
                 tah = TagsOfAreaInHour.create(area=area,
                     max_stamp=cur_max_time + small_delta,
                     min_stamp=cur_max_time)
@@ -102,7 +102,7 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         get_logger().info("{0} hour-areas added to {1}".format(count, location.name))
 
         update_location_time(location)
-        
+
         clear_old_hours(location, last_memory_time)
 
         # process not processed areas

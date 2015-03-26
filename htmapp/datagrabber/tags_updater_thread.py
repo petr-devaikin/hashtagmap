@@ -94,12 +94,14 @@ class TagsUpdaterThread(threading.Thread):
             self.logger.debug("Update area-hour {0} tags for area {1} found".format(len(tags), area.id))
 
             for tag_name in tags:
+                hashtag = Hashtag.get_or_create(name=tag_name)
                 try:
-                    hashtag = Hashtag.create(name=tag_name)
+                    HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
                 except peewee.IntegrityError:
-                    hashtag = Hashtag.get(Hashtag.name == tag_name)
-
-                HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
+                    hf = HashtagFrequency.get(HashtagFrequency.area_in_hour == area_hour,
+                        HashtagFrequency.hashtag == hashtag)
+                    hf.count += tags[tag_name]
+                    hf.save()
 
             area_hour.processed = datetime.datetime.now()
             area_hour.save()
