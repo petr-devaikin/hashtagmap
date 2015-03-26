@@ -81,7 +81,6 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         last_memory_time = now - datetime.timedelta(seconds=memory)
         small_delta = datetime.timedelta(seconds=current_app.config['TAGS_TIME_PERIOD'])
 
-        clear_old_hours(location, last_memory_time)
         update_location_time(location)
 
         start_time = location.updated or last_memory_time
@@ -103,6 +102,8 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         get_logger().info("{0} hour-areas added to {1}".format(count, location.name))
 
         update_location_time(location)
+        
+        clear_old_hours(location, last_memory_time)
 
         # process not processed areas
         for area in location.simple_areas:

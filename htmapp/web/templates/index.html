@@ -47,12 +47,14 @@
 
             <div id="legend">
                 {% for l in legend %}
-                    <div class="legendGroup" v="{{ l['min'] }}">
-                        <span class="min">{{ l['min'] }}</span>
-                        {% if loop.last %}
-                            <span class="max">{{ l['max'] }}</span>
-                        {% endif %}
-                    </div>
+                    {% if l['min'] != l['max'] %}
+                        <div class="legendGroup" v="{{ l['min'] }}">
+                            <span class="min">{{ l['min'] }}</span>
+                            {% if loop.last %}
+                                <span class="max">{{ l['max'] }}</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 {% endfor %}
                 <span id="comment">tags for last 24 hours</span>
             </div>

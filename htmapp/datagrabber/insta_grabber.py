@@ -4,6 +4,9 @@ from instagram.helper import datetime_to_timestamp
 from instagram.bind import InstagramAPIError, InstagramClientError
 
 import threading
+import re
+
+pattern = re.compile(u'[^\u0000-\uD7FF\uE000-\uFFFF]', re.UNICODE)
 
 
 class InstaGrabberBanException(Exception):
@@ -69,7 +72,7 @@ class InstaGrabber:
         for m in filter(is_media_in_range, self.all_media):
             try:
                 for t in m.tags:
-                    utf_tag = t.name.encode('utf-8')
+                    utf_tag = pattern.sub('', t.name)
                     if not utf_tag in tags:
                         tags[utf_tag] = 0
                     tags[utf_tag] += 1

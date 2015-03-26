@@ -82,7 +82,7 @@ class TagsUpdaterThread(threading.Thread):
 
         for area_hour in area_hours:
             # if something happened while updating and processed flag was not set up
-            for htf in area_hour.hashtag_counts: htf.delete_instance()
+            HashtagFrequency.delete().where(HashtagFrequency.area_in_hour == area_hour).execute()
 
             #print "Updating {0}".format(area_hour.id)
             max_stamp = calendar.timegm(area_hour.max_stamp.timetuple())
@@ -93,26 +93,13 @@ class TagsUpdaterThread(threading.Thread):
 
             self.logger.debug("Update area-hour {0} tags for area {1} found".format(len(tags), area.id))
 
-            i = 0
             for tag_name in tags:
                 try:
-                    self.db_lock.acquire()
-                    hashtag = Hashtag.get_or_create(name=tag_name)
+                    hashtag = Hashtag.create(name=tag_name)
                 except peewee.IntegrityError:
-                    self.logger.exception("Hashtag duplicate")
-                    continue
-                finally:
-                    self.db_lock.release()
+                    hashtag = Hashtag.get(Hashtag.name == tag_name)
 
-                i += 1
-                try:
-                    HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
-                except peewee.IntegrityError:
-                    self.logger.exception("Duplicate {2}: {0} > {1}, {3}".format(len(tags), len(set(tags)), i, hashtag.name == tag_name))
-                    hf = HashtagFrequency.select().where(HashtagFrequency.area_in_hour << [area_hour],
-                        HashtagFrequency.hashtag << [hashtag]).get()
-                    hf.count += tags[tag_name]
-                    hf.save()
+                HashtagFrequency.create(area_in_hour=area_hour, hashtag=hashtag, count=tags[tag_name])
 
             area_hour.processed = datetime.datetime.now()
             area_hour.save()
