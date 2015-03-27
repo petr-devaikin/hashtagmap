@@ -73,6 +73,8 @@ class InstaGrabber:
             try:
                 for t in m.tags:
                     utf_tag = pattern.sub('', t.name)
+                    if not utf_tag:
+                        continue
                     if not utf_tag in tags:
                         tags[utf_tag] = 0
                     tags[utf_tag] += 1

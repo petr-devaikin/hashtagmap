@@ -36,6 +36,9 @@ function HashtagGroup(element) {
 }
 
 HashtagGroup.prototype.drawTag = function(test_context, drawing_context, font_family) {
+    if (this.tag == '')
+        return;
+    
     var width = this.width;
     var height = this.height;
     if (this.rotate) {
