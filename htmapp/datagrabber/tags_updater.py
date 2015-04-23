@@ -133,6 +133,6 @@ def update_tags(request_threads_count, summarize_threads_count, memory):
         get_logger().info("Tags groupped for {0}".format(location.name))
         
     
-    clear_old_tags()
+    #clear_old_tags()
 
     get_logger().info('Tags update is done')
